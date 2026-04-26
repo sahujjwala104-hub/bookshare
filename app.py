@@ -13,21 +13,7 @@ CORS(app)
 def home():
     return send_from_directory(".", "index.html")
 
-@app.route("/create-admin")
-def create_admin():
-    try:
-        db = get_db()
-        cur = db.cursor()
-        hashed = generate_password_hash("admin123")
-        cur.execute("""
-            INSERT INTO User (Name, Email, Password, Phone, City, Address, Is_Admin)
-            VALUES ('Admin', 'admin@bookshare.com', %s, '0000000000', 'System', 'System', TRUE)
-        """, (hashed,))
-        db.commit()
-        cur.close(); db.close()
-        return "Admin created successfully!"
-    except Exception as e:
-        return str(e)
+
 
 # ---------------- DB Connection ----------------
 # Set these as environment variables — never hardcode credentials!
