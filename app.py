@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
 import mysql.connector
 from datetime import date
@@ -8,13 +8,25 @@ from werkzeug.security import generate_password_hash, check_password_hash
 app = Flask(__name__)
 CORS(app)
 
+# ---------------- Homepage ----------------
+@app.route("/")
+def home():
+    return send_from_directory(".", "index.html")
 
+# ---------------- DB Connection ----------------
+# Set these as environment variables — never hardcode credentials!
+# Locally you can create a .env file and load with python-dotenv,
+# or just export them in your terminal before running the app:
+#   export DB_HOST=localhost
+#   export DB_USER=root
+#   export DB_PASSWORD=your_password
+#   export DB_NAME=bookshare
 def get_db():
     return mysql.connector.connect(
-        host=os.environ.get("DB_HOST"),
-        user=os.environ.get("DB_USER"),
-        password=os.environ.get("DB_PASSWORD"),
-        database=os.environ.get("DB_NAME")
+        host=os.environ.get("DB_HOST", "localhost"),
+        user=os.environ.get("DB_USER", "root"),
+        password=os.environ.get("DB_PASSWORD", ""),
+        database=os.environ.get("DB_NAME", "bookshare")
     )
 
 # ---------------- Register ----------------
