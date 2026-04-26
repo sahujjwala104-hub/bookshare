@@ -467,7 +467,7 @@ async function handleLogin() {
   if (!email || !password) return showAlert('loginAlert', 'Please fill in all fields.');
   btn.disabled = true; btn.textContent = 'Logging in…';
   try {
-    const r = await fetch(API + '/login', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({email, password}) });
+    const r = await fetch(API + '/api/login', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({email, password}) });
     const d = await r.json();
     if (d.success) { currentUser = d.user; enterApp(); }
     else showAlert('loginAlert', d.message || 'Invalid credentials.');
@@ -489,7 +489,7 @@ async function handleRegister() {
   if (!payload.name || !payload.email || !payload.password) return showAlert('registerAlert', 'Please fill all required fields.');
   btn.disabled = true; btn.textContent = 'Registering…';
   try {
-    const r = await fetch(API + '/register', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload) });
+    const r = await fetch(API + '/api/register', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload) });
     const d = await r.json();
     if (d.success) { showAlert('registerAlert', 'Account created! Redirecting to login…', 'success'); setTimeout(showLogin, 1500); }
     else showAlert('registerAlert', d.message || 'Registration failed.');
@@ -500,7 +500,7 @@ async function handleRegister() {
 // ── categories & genres ───────────────────────────────────────────────────
 async function loadCategories() {
   try {
-    const r = await fetch(API + '/categories');
+    const r = await fetch(API + '/api/categories');
     const d = await r.json();
     const sel = document.getElementById('bookCategory');
     sel.innerHTML = '<option value="">Select Category</option>';
@@ -540,7 +540,7 @@ async function handleAddBook() {
   const btn = document.getElementById('addBookBtn');
   btn.disabled = true; btn.textContent = 'Adding…';
   try {
-    const r = await fetch(API + '/books', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload) });
+    const r = await fetch(API + '/api/books', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload) });
     const d = await r.json();
     if (d.success) { showAlert('addBookAlert', 'Book listed successfully!', 'success'); document.getElementById('bookTitle').value = ''; }
     else showAlert('addBookAlert', d.message || 'Error adding book.');
@@ -818,7 +818,7 @@ async function submitReview() {
 // ── init ──────────────────────────────────────────────────────────────────
 window.addEventListener('load', async () => {
   try {
-    await fetch(API + '/categories');
+    await fetch(API + '/api/categories');
   } catch(e) {
     console.warn('API not reachable:', e.message);
   }
