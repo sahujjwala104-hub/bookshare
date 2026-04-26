@@ -7,85 +7,49 @@
   <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;600&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg: #f7f4ef;
-      --surface: #ffffff;
-      --surface2: #f0ece4;
-      --primary: #3d5a4c;
-      --primary-light: #4e7360;
-      --accent: #c07c45;
-      --text: #1e1e1e;
-      --text-muted: #6b6560;
-      --border: #ddd8ce;
-      --success-bg: #eaf2ec;
-      --success-text: #2d6a3f;
-      --error-bg: #f9eded;
-      --error-text: #8b3a3a;
-      --radius: 10px;
-      --shadow: 0 2px 12px rgba(0,0,0,0.07);
+      --bg: #f7f4ef; --surface: #ffffff; --surface2: #f0ece4;
+      --primary: #3d5a4c; --primary-light: #4e7360; --accent: #c07c45;
+      --text: #1e1e1e; --text-muted: #6b6560; --border: #ddd8ce;
+      --success-bg: #eaf2ec; --success-text: #2d6a3f;
+      --error-bg: #f9eded; --error-text: #8b3a3a;
+      --radius: 10px; --shadow: 0 2px 12px rgba(0,0,0,0.07);
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; min-height: 100vh; }
-
-    /* Typography */
     h1, h2, h3 { font-family: 'Lora', serif; font-weight: 600; }
-
-    /* Utils */
     .hidden { display: none !important; }
-    .center { text-align: center; }
-
-    /* Buttons */
     .btn { padding: 9px 20px; border: none; border-radius: var(--radius); cursor: pointer; font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 500; transition: background .2s, transform .1s; display: inline-block; }
     .btn:active { transform: scale(.98); }
     .btn-primary { background: var(--primary); color: #fff; }
     .btn-primary:hover { background: var(--primary-light); }
-    .btn-accent { background: var(--accent); color: #fff; }
-    .btn-accent:hover { background: #b06e38; }
     .btn-ghost { background: transparent; color: var(--primary); border: 1.5px solid var(--primary); }
     .btn-ghost:hover { background: var(--surface2); }
     .btn-sm { padding: 5px 12px; font-size: 13px; }
     .btn-full { width: 100%; }
     .btn:disabled { opacity: .6; cursor: not-allowed; }
-
-    /* Alerts */
     .alert { padding: 10px 14px; border-radius: 8px; font-size: 14px; margin-bottom: 14px; }
     .alert-success { background: var(--success-bg); color: var(--success-text); }
     .alert-error { background: var(--error-bg); color: var(--error-text); }
-
-    /* Forms */
     .form-group { margin-bottom: 14px; }
     .form-label { display: block; font-size: 13px; font-weight: 600; color: var(--text-muted); margin-bottom: 5px; text-transform: uppercase; letter-spacing: .04em; }
-    .form-input, .form-select, .form-textarea {
-      width: 100%; padding: 9px 12px; border: 1.5px solid var(--border);
-      border-radius: 8px; font-family: 'DM Sans', sans-serif; font-size: 14px;
-      background: var(--surface); color: var(--text); transition: border .2s;
-    }
+    .form-input, .form-select, .form-textarea { width: 100%; padding: 9px 12px; border: 1.5px solid var(--border); border-radius: 8px; font-family: 'DM Sans', sans-serif; font-size: 14px; background: var(--surface); color: var(--text); transition: border .2s; }
     .form-input:focus, .form-select:focus, .form-textarea:focus { outline: none; border-color: var(--primary); }
     .form-textarea { min-height: 90px; resize: vertical; }
     .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-
-    /* Header */
     .header { background: var(--surface); border-bottom: 1.5px solid var(--border); padding: 14px 0; position: sticky; top: 0; z-index: 100; }
     .header-inner { max-width: 1100px; margin: 0 auto; padding: 0 24px; display: flex; justify-content: space-between; align-items: center; }
     .logo { font-family: 'Lora', serif; font-size: 22px; color: var(--primary); font-weight: 600; }
     .logo span { color: var(--accent); }
     .header-actions { display: flex; gap: 10px; align-items: center; }
     .user-chip { background: var(--surface2); border-radius: 20px; padding: 5px 14px; font-size: 13px; color: var(--text-muted); }
-
-    /* Auth pages */
     .auth-wrap { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; background: var(--bg); }
     .auth-card { background: var(--surface); border-radius: 16px; padding: 40px; width: 100%; max-width: 480px; box-shadow: 0 4px 24px rgba(0,0,0,0.09); border: 1.5px solid var(--border); }
     .auth-logo { text-align: center; font-family: 'Lora', serif; font-size: 32px; color: var(--primary); margin-bottom: 6px; }
     .auth-sub { text-align: center; color: var(--text-muted); font-size: 14px; margin-bottom: 28px; }
     .auth-switch { text-align: center; margin-top: 16px; font-size: 14px; color: var(--text-muted); }
     .auth-switch a { color: var(--primary); cursor: pointer; font-weight: 500; }
-
-    /* Landing buttons */
     .landing-btns { display: flex; flex-direction: column; gap: 10px; margin-top: 24px; }
-
-    /* Main layout */
     .main-wrap { max-width: 1100px; margin: 0 auto; padding: 28px 24px; }
-
-    /* Dashboard grid */
     .dash-greeting { margin-bottom: 24px; }
     .dash-greeting h2 { font-size: 24px; }
     .dash-greeting p { color: var(--text-muted); font-size: 14px; margin-top: 4px; }
@@ -95,13 +59,9 @@
     .nav-card .icon { font-size: 30px; margin-bottom: 10px; }
     .nav-card .label { font-weight: 600; font-size: 14px; }
     .nav-card .sublabel { font-size: 12px; color: var(--text-muted); margin-top: 3px; }
-
-    /* Section cards */
     .section-card { background: var(--surface); border-radius: 14px; border: 1.5px solid var(--border); padding: 24px; box-shadow: var(--shadow); }
     .section-header { display: flex; align-items: center; gap: 14px; margin-bottom: 20px; }
     .section-title { font-family: 'Lora', serif; font-size: 20px; }
-
-    /* Tables */
     .table-wrap { overflow-x: auto; border-radius: 8px; border: 1.5px solid var(--border); }
     table { width: 100%; border-collapse: collapse; font-size: 14px; }
     thead th { background: var(--surface2); padding: 11px 14px; text-align: left; font-size: 12px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: .04em; border-bottom: 1.5px solid var(--border); }
@@ -109,26 +69,18 @@
     tbody tr:last-child td { border-bottom: none; }
     tbody tr:hover { background: var(--bg); }
     .empty-row td { text-align: center; color: var(--text-muted); padding: 32px; }
-
-    /* Badge */
     .badge { display: inline-block; padding: 2px 10px; border-radius: 20px; font-size: 12px; font-weight: 500; }
     .badge-green { background: var(--success-bg); color: var(--success-text); }
     .badge-red { background: var(--error-bg); color: var(--error-text); }
     .badge-amber { background: #fef3e2; color: #92540a; }
-
-    /* Search bar */
     .search-bar { display: flex; gap: 10px; margin-bottom: 18px; }
     .search-bar .form-input { flex: 1; }
-
-    /* Modal */
     .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.45); z-index: 999; align-items: center; justify-content: center; }
     .modal-overlay.active { display: flex; }
     .modal-box { background: var(--surface); border-radius: 14px; padding: 28px; width: 90%; max-width: 480px; max-height: 90vh; overflow-y: auto; box-shadow: 0 8px 40px rgba(0,0,0,.15); }
     .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; }
     .modal-header h3 { font-family: 'Lora', serif; font-size: 18px; }
     .modal-close { background: none; border: none; font-size: 22px; cursor: pointer; color: var(--text-muted); line-height: 1; }
-
-    /* Book detail in modal */
     .book-detail { background: var(--surface2); border-radius: 10px; padding: 16px; margin-bottom: 16px; }
     .book-detail p { font-size: 14px; margin-bottom: 6px; color: var(--text-muted); }
     .book-detail p strong { color: var(--text); }
@@ -136,32 +88,18 @@
     .seller-contact h4 { font-size: 14px; font-weight: 600; color: var(--success-text); margin-bottom: 8px; }
     .seller-contact p { font-size: 14px; color: var(--text); margin-bottom: 4px; }
     .cod-note { background: #fef3e2; border: 1.5px solid #f5c97a; border-radius: 8px; padding: 10px 14px; font-size: 13px; color: #7a4f0d; margin-top: 12px; }
-
-    /* Stars */
     .stars { color: var(--accent); font-size: 16px; }
-
-    /* Review form inside section */
     .review-tabs { display: flex; gap: 0; margin-bottom: 20px; border: 1.5px solid var(--border); border-radius: 8px; overflow: hidden; width: fit-content; }
     .review-tab { padding: 8px 20px; font-size: 13px; font-weight: 500; cursor: pointer; background: var(--surface); color: var(--text-muted); border: none; font-family: 'DM Sans', sans-serif; transition: background .15s, color .15s; }
     .review-tab.active { background: var(--primary); color: #fff; }
-
-    /* Spinner */
     .spinner { display: inline-block; width: 16px; height: 16px; border: 2.5px solid rgba(0,0,0,.1); border-top-color: var(--primary); border-radius: 50%; animation: spin .7s linear infinite; vertical-align: middle; margin-right: 6px; }
     @keyframes spin { to { transform: rotate(360deg); } }
-
-    /* Divider */
-    .divider { border: none; border-top: 1.5px solid var(--border); margin: 20px 0; }
-
-    @media (max-width: 600px) {
-      .form-row { grid-template-columns: 1fr; }
-      .nav-grid { grid-template-columns: repeat(2, 1fr); }
-      .auth-card { padding: 28px 20px; }
-    }
+    @media (max-width: 600px) { .form-row { grid-template-columns: 1fr; } .nav-grid { grid-template-columns: repeat(2, 1fr); } .auth-card { padding: 28px 20px; } }
   </style>
 </head>
 <body>
 
-<!-- ===== LANDING ===== -->
+<!-- LANDING -->
 <div id="landingPage" class="auth-wrap">
   <div class="auth-card">
     <div class="auth-logo">📚 BookShare</div>
@@ -173,20 +111,20 @@
   </div>
 </div>
 
-<!-- ===== LOGIN ===== -->
+<!-- LOGIN -->
 <div id="loginPage" class="auth-wrap hidden">
   <div class="auth-card">
     <div class="auth-logo">Welcome Back</div>
     <div class="auth-sub">Sign in to your BookShare account</div>
     <div id="loginAlert"></div>
-    <div class="form-group"><label class="form-label">Email</label><input id="loginEmail" class="form-input" type="email" placeholder="you@example.com" required /></div>
-    <div class="form-group"><label class="form-label">Password</label><input id="loginPassword" class="form-input" type="password" placeholder="••••••••" required /></div>
+    <div class="form-group"><label class="form-label">Email</label><input id="loginEmail" class="form-input" type="email" placeholder="you@example.com" /></div>
+    <div class="form-group"><label class="form-label">Password</label><input id="loginPassword" class="form-input" type="password" placeholder="••••••••" /></div>
     <button id="loginBtn" class="btn btn-primary btn-full" onclick="handleLogin()">Login</button>
     <div class="auth-switch">Don't have an account? <a onclick="showRegister()">Register</a></div>
   </div>
 </div>
 
-<!-- ===== REGISTER ===== -->
+<!-- REGISTER -->
 <div id="registerPage" class="auth-wrap hidden">
   <div class="auth-card">
     <div class="auth-logo">Create Account</div>
@@ -207,7 +145,7 @@
   </div>
 </div>
 
-<!-- ===== MAIN APP ===== -->
+<!-- MAIN APP -->
 <div id="mainApp" class="hidden">
   <div class="header">
     <div class="header-inner">
@@ -219,7 +157,6 @@
       </div>
     </div>
   </div>
-
   <div class="main-wrap">
 
     <!-- Dashboard -->
@@ -229,33 +166,18 @@
         <p>What would you like to do today?</p>
       </div>
       <div class="nav-grid">
-        <div class="nav-card" onclick="showSection('addBook'); loadCategories()">
-          <div class="icon">➕</div><div class="label">Add Book</div><div class="sublabel">List your book</div>
-        </div>
-        <div class="nav-card" onclick="showSection('browseBooks'); loadBrowseBooks()">
-          <div class="icon">📖</div><div class="label">Browse</div><div class="sublabel">Find available books</div>
-        </div>
-        <div class="nav-card" onclick="showSection('searchBooks')">
-          <div class="icon">🔍</div><div class="label">Search</div><div class="sublabel">By title, author, genre</div>
-        </div>
-        <div class="nav-card" onclick="showSection('myBooks'); loadMyBooks()">
-          <div class="icon">📚</div><div class="label">My Books</div><div class="sublabel">Books you listed</div>
-        </div>
-        <div class="nav-card" onclick="showSection('myActivities'); loadMyActivities()">
-          <div class="icon">📋</div><div class="label">Activities</div><div class="sublabel">Your transactions</div>
-        </div>
-        <div class="nav-card" onclick="showSection('reviews')">
-          <div class="icon">⭐</div><div class="label">Reviews</div><div class="sublabel">Read &amp; write reviews</div>
-        </div>
+        <div class="nav-card" onclick="showSection('addBook'); loadCategories()"><div class="icon">➕</div><div class="label">Add Book</div><div class="sublabel">List your book</div></div>
+        <div class="nav-card" onclick="showSection('browseBooks'); loadBrowseBooks()"><div class="icon">📖</div><div class="label">Browse</div><div class="sublabel">Find available books</div></div>
+        <div class="nav-card" onclick="showSection('searchBooks')"><div class="icon">🔍</div><div class="label">Search</div><div class="sublabel">By title, author, genre</div></div>
+        <div class="nav-card" onclick="showSection('myBooks'); loadMyBooks()"><div class="icon">📚</div><div class="label">My Books</div><div class="sublabel">Books you listed</div></div>
+        <div class="nav-card" onclick="showSection('myActivities'); loadMyActivities()"><div class="icon">📋</div><div class="label">Activities</div><div class="sublabel">Your transactions</div></div>
+        <div class="nav-card" onclick="showSection('reviews')"><div class="icon">⭐</div><div class="label">Reviews</div><div class="sublabel">Read &amp; write reviews</div></div>
       </div>
     </div>
 
     <!-- Add Book -->
     <div id="addBook" class="section-card hidden">
-      <div class="section-header">
-        <button class="btn btn-ghost btn-sm" onclick="showDashboard()">← Back</button>
-        <h2 class="section-title">Add Your Book</h2>
-      </div>
+      <div class="section-header"><button class="btn btn-ghost btn-sm" onclick="showDashboard()">← Back</button><h2 class="section-title">Add Your Book</h2></div>
       <div id="addBookAlert"></div>
       <div class="form-row">
         <div class="form-group"><label class="form-label">Title</label><input id="bookTitle" class="form-input" placeholder="Book title" /></div>
@@ -267,9 +189,7 @@
       </div>
       <div class="form-row">
         <div class="form-group"><label class="form-label">Category</label>
-          <select id="bookCategory" class="form-select" onchange="loadGenres()">
-            <option value="">Select Category</option>
-          </select>
+          <select id="bookCategory" class="form-select" onchange="loadGenres()"><option value="">Select Category</option></select>
         </div>
         <div class="form-group"><label class="form-label">Genre</label>
           <select id="bookGenre" class="form-select"><option value="">Select Genre</option></select>
@@ -293,10 +213,7 @@
 
     <!-- Browse Books -->
     <div id="browseBooks" class="section-card hidden">
-      <div class="section-header">
-        <button class="btn btn-ghost btn-sm" onclick="showDashboard()">← Back</button>
-        <h2 class="section-title">Available Books</h2>
-      </div>
+      <div class="section-header"><button class="btn btn-ghost btn-sm" onclick="showDashboard()">← Back</button><h2 class="section-title">Available Books</h2></div>
       <div class="table-wrap">
         <table>
           <thead><tr><th>Title</th><th>Author</th><th>Type</th><th>Price</th><th>Owner</th><th>City</th><th></th></tr></thead>
@@ -307,10 +224,7 @@
 
     <!-- Search Books -->
     <div id="searchBooks" class="section-card hidden">
-      <div class="section-header">
-        <button class="btn btn-ghost btn-sm" onclick="showDashboard()">← Back</button>
-        <h2 class="section-title">Search Books</h2>
-      </div>
+      <div class="section-header"><button class="btn btn-ghost btn-sm" onclick="showDashboard()">← Back</button><h2 class="section-title">Search Books</h2></div>
       <div class="search-bar">
         <input id="searchKeyword" class="form-input" placeholder="Search by title, author or genre…" onkeydown="if(event.key==='Enter') performSearch()" />
         <button class="btn btn-primary" onclick="performSearch()">Search</button>
@@ -325,10 +239,7 @@
 
     <!-- My Books -->
     <div id="myBooks" class="section-card hidden">
-      <div class="section-header">
-        <button class="btn btn-ghost btn-sm" onclick="showDashboard()">← Back</button>
-        <h2 class="section-title">My Listed Books</h2>
-      </div>
+      <div class="section-header"><button class="btn btn-ghost btn-sm" onclick="showDashboard()">← Back</button><h2 class="section-title">My Listed Books</h2></div>
       <div class="table-wrap">
         <table>
           <thead><tr><th>Title</th><th>Author</th><th>Type</th><th>Price</th><th>Status</th></tr></thead>
@@ -339,10 +250,7 @@
 
     <!-- My Activities -->
     <div id="myActivities" class="section-card hidden">
-      <div class="section-header">
-        <button class="btn btn-ghost btn-sm" onclick="showDashboard()">← Back</button>
-        <h2 class="section-title">My Activities</h2>
-      </div>
+      <div class="section-header"><button class="btn btn-ghost btn-sm" onclick="showDashboard()">← Back</button><h2 class="section-title">My Activities</h2></div>
       <div class="table-wrap">
         <table>
           <thead><tr><th>Book</th><th>Other Party</th><th>Type</th><th>Direction</th><th>Date</th><th>Price</th></tr></thead>
@@ -353,16 +261,11 @@
 
     <!-- Reviews -->
     <div id="reviews" class="section-card hidden">
-      <div class="section-header">
-        <button class="btn btn-ghost btn-sm" onclick="showDashboard()">← Back</button>
-        <h2 class="section-title">Reviews</h2>
-      </div>
+      <div class="section-header"><button class="btn btn-ghost btn-sm" onclick="showDashboard()">← Back</button><h2 class="section-title">Reviews</h2></div>
       <div class="review-tabs">
         <button class="review-tab active" onclick="switchReviewTab('view', this)">View Reviews</button>
         <button class="review-tab" onclick="switchReviewTab('write', this)">Write a Review</button>
       </div>
-
-      <!-- View Reviews -->
       <div id="reviewViewTab">
         <div class="search-bar">
           <input id="reviewSearchName" class="form-input" placeholder="Enter book title to search reviews…" onkeydown="if(event.key==='Enter') viewReviewsByName()" />
@@ -370,8 +273,6 @@
         </div>
         <div id="reviewsContent"></div>
       </div>
-
-      <!-- Write Review -->
       <div id="reviewWriteTab" class="hidden">
         <div id="writeReviewAlert"></div>
         <div class="form-group"><label class="form-label">Book Title</label>
@@ -384,22 +285,21 @@
         <div id="writeReviewForm" class="hidden">
           <div class="form-group"><label class="form-label">Rating (1–5)</label>
             <div id="starPicker" style="display:flex;gap:6px;margin-top:4px">
-              <span style="font-size:28px;cursor:pointer" onclick="setRating(1)" data-val="1">☆</span>
-              <span style="font-size:28px;cursor:pointer" onclick="setRating(2)" data-val="2">☆</span>
-              <span style="font-size:28px;cursor:pointer" onclick="setRating(3)" data-val="3">☆</span>
-              <span style="font-size:28px;cursor:pointer" onclick="setRating(4)" data-val="4">☆</span>
-              <span style="font-size:28px;cursor:pointer" onclick="setRating(5)" data-val="5">☆</span>
+              <span style="font-size:28px;cursor:pointer" onclick="setRating(1)">☆</span>
+              <span style="font-size:28px;cursor:pointer" onclick="setRating(2)">☆</span>
+              <span style="font-size:28px;cursor:pointer" onclick="setRating(3)">☆</span>
+              <span style="font-size:28px;cursor:pointer" onclick="setRating(4)">☆</span>
+              <span style="font-size:28px;cursor:pointer" onclick="setRating(5)">☆</span>
             </div>
-            <input type="hidden" id="selectedRating" value="0" />
           </div>
-          <div class="form-group"><label class="form-label">Comment</label><textarea id="reviewComment" class="form-textarea" placeholder="Share your thoughts about this book…"></textarea></div>
+          <div class="form-group"><label class="form-label">Comment</label><textarea id="reviewComment" class="form-textarea" placeholder="Share your thoughts…"></textarea></div>
           <button class="btn btn-primary" onclick="submitReview()">Submit Review</button>
         </div>
       </div>
     </div>
 
-  </div><!-- /main-wrap -->
-</div><!-- /mainApp -->
+  </div>
+</div>
 
 <!-- Request Modal -->
 <div id="requestModal" class="modal-overlay">
@@ -416,24 +316,22 @@
 const API = "https://bookshare-pq33.onrender.com";
 let currentUser = null;
 let selectedBookIdForReview = null;
+let currentRating = 0;
+let pendingRequest = null;
 
-// ── helpers ──────────────────────────────────────────────────────────────
 function esc(s) {
   if (s == null) return '';
   return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 }
-function showAlert(containerId, msg, type='error') {
-  document.getElementById(containerId).innerHTML = `<div class="alert alert-${type}">${msg}</div>`;
-}
+function showAlert(id, msg, type='error') { document.getElementById(id).innerHTML = `<div class="alert alert-${type}">${msg}</div>`; }
 function clearAlert(id) { document.getElementById(id).innerHTML = ''; }
 
-// ── page routing ─────────────────────────────────────────────────────────
-function hideAllPages() {
-  ['landingPage','loginPage','registerPage','mainApp'].forEach(id => document.getElementById(id).classList.add('hidden'));
-}
+// ── routing ──
+function hideAllPages() { ['landingPage','loginPage','registerPage','mainApp'].forEach(id => document.getElementById(id).classList.add('hidden')); }
 function showLogin() { hideAllPages(); document.getElementById('loginPage').classList.remove('hidden'); }
 function showRegister() { hideAllPages(); document.getElementById('registerPage').classList.remove('hidden'); }
 function goHome() { hideAllPages(); document.getElementById('landingPage').classList.remove('hidden'); }
+function handleLogout() { currentUser = null; goHome(); }
 
 function showDashboard() {
   ['addBook','browseBooks','searchBooks','myBooks','myActivities','reviews'].forEach(id => document.getElementById(id).classList.add('hidden'));
@@ -444,7 +342,6 @@ function showSection(id) {
   ['addBook','browseBooks','searchBooks','myBooks','myActivities','reviews'].forEach(s => document.getElementById(s).classList.add('hidden'));
   document.getElementById(id).classList.remove('hidden');
 }
-
 function enterApp() {
   hideAllPages();
   document.getElementById('mainApp').classList.remove('hidden');
@@ -453,12 +350,7 @@ function enterApp() {
   showDashboard();
 }
 
-function handleLogout() {
-  currentUser = null;
-  goHome();
-}
-
-// ── auth ─────────────────────────────────────────────────────────────────
+// ── auth ──
 async function handleLogin() {
   const btn = document.getElementById('loginBtn');
   clearAlert('loginAlert');
@@ -471,7 +363,7 @@ async function handleLogin() {
     const d = await r.json();
     if (d.success) { currentUser = d.user; enterApp(); }
     else showAlert('loginAlert', d.message || 'Invalid credentials.');
-  } catch(e) { showAlert('loginAlert', 'Cannot reach server. Is app.py running?'); }
+  } catch(e) { showAlert('loginAlert', 'Cannot reach server.'); }
   finally { btn.disabled = false; btn.textContent = 'Login'; }
 }
 
@@ -497,7 +389,7 @@ async function handleRegister() {
   finally { btn.disabled = false; btn.textContent = 'Register'; }
 }
 
-// ── categories & genres ───────────────────────────────────────────────────
+// ── categories & genres ──
 async function loadCategories() {
   try {
     const r = await fetch(API + '/api/categories');
@@ -508,9 +400,10 @@ async function loadCategories() {
   } catch(e) {}
 }
 async function loadGenres() {
-  const cid = document.getElementById('bookCategory').value; if (!cid) return;
+  const cid = document.getElementById('bookCategory').value;
+  if (!cid) return;
   try {
-    const r = await fetch(API + '/genres?category_id=' + encodeURIComponent(cid));
+    const r = await fetch(API + '/api/genres?category_id=' + encodeURIComponent(cid));
     const d = await r.json();
     const sel = document.getElementById('bookGenre');
     sel.innerHTML = '<option value="">Select Genre</option>';
@@ -522,7 +415,7 @@ function togglePriceField() {
   document.getElementById('priceGroup').classList.toggle('hidden', !(t === 'sell' || t === 'lend'));
 }
 
-// ── add book ──────────────────────────────────────────────────────────────
+// ── add book ──
 async function handleAddBook() {
   clearAlert('addBookAlert');
   const payload = {
@@ -548,12 +441,16 @@ async function handleAddBook() {
   finally { btn.disabled = false; btn.textContent = 'Add Book'; }
 }
 
-// ── browse books ──────────────────────────────────────────────────────────
+// ── browse ──
+function badgeType(t) {
+  const map = { sell:'badge-amber', lend:'badge-green', donate:'badge-green', buy:'badge-amber', borrow:'badge-green', donation:'badge-green' };
+  return `<span class="badge ${map[t]||'badge-amber'}">${esc(t)}</span>`;
+}
 async function loadBrowseBooks() {
   const body = document.getElementById('browseBooksBody');
   body.innerHTML = '<tr class="empty-row"><td colspan="7"><span class="spinner"></span> Loading…</td></tr>';
   try {
-    const r = await fetch(API + `/books/available?user_id=${encodeURIComponent(currentUser.User_id)}`);
+    const r = await fetch(API + `/api/books/available?user_id=${encodeURIComponent(currentUser.User_id)}`);
     const d = await r.json();
     if (d.success && d.data.length) {
       body.innerHTML = d.data.map(b => `<tr>
@@ -565,7 +462,7 @@ async function loadBrowseBooks() {
         <td>${esc(b.City)}</td>
         <td>${b.Owner_id === currentUser.User_id
           ? '<span class="badge badge-green">Your Book</span>'
-          : `<button class="btn btn-primary btn-sm" onclick="openRequestModal(${b.Book_id}, ${b.Owner_id}, '${esc(b.Activity_type)}', ${b.Price || 0}, '${esc(b.Title)}', '${esc(b.Owner)}')">Request</button>`
+          : `<button class="btn btn-primary btn-sm" onclick="openRequestModal(${b.Book_id},${b.Owner_id},'${esc(b.Activity_type)}',${b.Price||0},'${esc(b.Title)}','${esc(b.Owner)}')">Request</button>`
         }</td>
       </tr>`).join('');
     } else {
@@ -574,19 +471,14 @@ async function loadBrowseBooks() {
   } catch(e) { body.innerHTML = `<tr class="empty-row"><td colspan="7">Error: ${e.message}</td></tr>`; }
 }
 
-function badgeType(t) {
-  const map = { sell:'badge-amber', lend:'badge-green', donate:'badge-green', buy:'badge-amber', borrow:'badge-green', donation:'badge-green' };
-  return `<span class="badge ${map[t]||'badge-amber'}">${esc(t)}</span>`;
-}
-
-// ── search ────────────────────────────────────────────────────────────────
+// ── search ──
 async function performSearch() {
   const kw = document.getElementById('searchKeyword').value.trim();
   const body = document.getElementById('searchResultsBody');
   if (!kw) { body.innerHTML = '<tr class="empty-row"><td colspan="7">Enter a keyword to search</td></tr>'; return; }
   body.innerHTML = '<tr class="empty-row"><td colspan="7"><span class="spinner"></span> Searching…</td></tr>';
   try {
-    const r = await fetch(API + `/books/search?keyword=${encodeURIComponent(kw)}&user_id=${encodeURIComponent(currentUser.User_id)}`);
+    const r = await fetch(API + `/api/books/search?keyword=${encodeURIComponent(kw)}&user_id=${encodeURIComponent(currentUser.User_id)}`);
     const d = await r.json();
     if (d.success && d.data.length) {
       body.innerHTML = d.data.map(b => `<tr>
@@ -596,7 +488,7 @@ async function performSearch() {
         <td>${badgeType(b.Activity_type)}</td>
         <td>₹${b.Price || 0}</td>
         <td>${esc(b.Owner)}</td>
-        <td>${b.Owner_id ? `<button class="btn btn-primary btn-sm" onclick="openRequestModal(${b.Book_id}, ${b.Owner_id}, '${esc(b.Activity_type)}', ${b.Price||0}, '${esc(b.Title)}', '${esc(b.Owner)}')">Request</button>` : ''}</td>
+        <td><button class="btn btn-primary btn-sm" onclick="openRequestModal(${b.Book_id},${b.Owner_id},'${esc(b.Activity_type)}',${b.Price||0},'${esc(b.Title)}','${esc(b.Owner)}')">Request</button></td>
       </tr>`).join('');
     } else {
       body.innerHTML = '<tr class="empty-row"><td colspan="7">No results found.</td></tr>';
@@ -604,12 +496,12 @@ async function performSearch() {
   } catch(e) { body.innerHTML = `<tr class="empty-row"><td colspan="7">Error: ${e.message}</td></tr>`; }
 }
 
-// ── my books & activities ─────────────────────────────────────────────────
+// ── my books ──
 async function loadMyBooks() {
   const body = document.getElementById('myBooksBody');
   body.innerHTML = '<tr class="empty-row"><td colspan="5"><span class="spinner"></span> Loading…</td></tr>';
   try {
-    const r = await fetch(API + `/books/my-books?user_id=${encodeURIComponent(currentUser.User_id)}`);
+    const r = await fetch(API + `/api/books/my-books?user_id=${encodeURIComponent(currentUser.User_id)}`);
     const d = await r.json();
     if (d.success && d.data.length) {
       body.innerHTML = d.data.map(b => `<tr>
@@ -625,11 +517,12 @@ async function loadMyBooks() {
   } catch(e) { body.innerHTML = `<tr class="empty-row"><td colspan="5">Error: ${e.message}</td></tr>`; }
 }
 
+// ── my activities ──
 async function loadMyActivities() {
   const body = document.getElementById('myActivitiesBody');
   body.innerHTML = '<tr class="empty-row"><td colspan="6"><span class="spinner"></span> Loading…</td></tr>';
   try {
-    const r = await fetch(API + `/activities/my-activities?user_id=${encodeURIComponent(currentUser.User_id)}`);
+    const r = await fetch(API + `/api/activities/my-activities?user_id=${encodeURIComponent(currentUser.User_id)}`);
     const d = await r.json();
     if (d.success && d.data.length) {
       body.innerHTML = d.data.map(a => `<tr>
@@ -646,9 +539,7 @@ async function loadMyActivities() {
   } catch(e) { body.innerHTML = `<tr class="empty-row"><td colspan="6">Error: ${e.message}</td></tr>`; }
 }
 
-// ── request modal (with seller phone + COD note) ──────────────────────────
-let pendingRequest = null;
-
+// ── request modal ──
 function openRequestModal(bookId, ownerId, activityType, price, title, owner) {
   pendingRequest = { bookId, ownerId, activityType, price };
   document.getElementById('requestModalContent').innerHTML = `
@@ -657,7 +548,7 @@ function openRequestModal(bookId, ownerId, activityType, price, title, owner) {
       <p>Owner: ${esc(owner)}</p>
       <p>Type: ${activityType} &nbsp;|&nbsp; Price: ₹${price}</p>
     </div>
-    <div class="cod-note">💡 <strong>Cash on Delivery only.</strong> No pre-payment required. Pay the seller when you receive the book.</div>
+    <div class="cod-note">💡 <strong>Cash on Delivery only.</strong> No pre-payment required.</div>
     <div style="margin-top:16px;display:flex;gap:10px">
       <button class="btn btn-primary" onclick="confirmRequest()">Confirm Request</button>
       <button class="btn btn-ghost" onclick="closeRequestModal()">Cancel</button>
@@ -666,11 +557,7 @@ function openRequestModal(bookId, ownerId, activityType, price, title, owner) {
   `;
   document.getElementById('requestModal').classList.add('active');
 }
-
-function closeRequestModal() {
-  document.getElementById('requestModal').classList.remove('active');
-  pendingRequest = null;
-}
+function closeRequestModal() { document.getElementById('requestModal').classList.remove('active'); pendingRequest = null; }
 
 async function confirmRequest() {
   if (!pendingRequest || !currentUser) return;
@@ -685,20 +572,17 @@ async function confirmRequest() {
     price: pendingRequest.price
   };
   try {
-    const r = await fetch(API + '/activities/request', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload) });
+    const r = await fetch(API + '/api/activities/request', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload) });
     const d = await r.json();
     if (d.success) {
-      // Show seller's phone number
       const sellerHtml = d.seller ? `
         <div class="seller-contact">
           <h4>📞 Seller Contact Details</h4>
           <p><strong>${esc(d.seller.name)}</strong></p>
           <p>Phone: <strong>${esc(d.seller.phone)}</strong></p>
         </div>
-        <div class="cod-note" style="margin-top:10px">Reach out to the seller to arrange delivery. Pay in cash when you receive the book.</div>
-      ` : '';
+        <div class="cod-note" style="margin-top:10px">Pay in cash when you receive the book.</div>` : '';
       document.getElementById('requestResult').innerHTML = `<div class="alert alert-success">Request recorded!</div>${sellerHtml}`;
-      // remove action buttons
       btn.remove();
       document.querySelector('#requestModalContent .btn-ghost').remove();
       loadBrowseBooks();
@@ -712,7 +596,7 @@ async function confirmRequest() {
   }
 }
 
-// ── reviews ───────────────────────────────────────────────────────────────
+// ── reviews ──
 function switchReviewTab(tab, el) {
   document.querySelectorAll('.review-tab').forEach(t => t.classList.remove('active'));
   el.classList.add('active');
@@ -726,20 +610,18 @@ async function viewReviewsByName() {
   if (!name) { out.innerHTML = '<div class="alert alert-error">Enter a book title.</div>'; return; }
   out.innerHTML = '<div style="padding:16px;color:var(--text-muted)"><span class="spinner"></span> Loading…</div>';
   try {
-    const r = await fetch(API + `/reviews/by-name?title=${encodeURIComponent(name)}`);
+    const r = await fetch(API + `/api/reviews/by-name?title=${encodeURIComponent(name)}`);
     const d = await r.json();
     if (d.success && d.data.length) {
-      out.innerHTML = `<p style="font-size:13px;color:var(--text-muted);margin-bottom:12px">Showing reviews for <strong>${esc(d.book_title)}</strong></p>` +
-        d.data.map(rv => `
-          <div style="padding:14px;border-bottom:1px solid var(--border)">
-            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
-              <strong style="font-size:14px">${esc(rv.Reviewer)}</strong>
-              <span class="stars">${'★'.repeat(rv.Rating)}${'☆'.repeat(5-rv.Rating)}</span>
-            </div>
-            <p style="font-size:14px;color:var(--text-muted);margin-bottom:4px">${esc(rv.Comment)}</p>
-            <p style="font-size:12px;color:var(--text-muted)">${esc(rv.Date)}</p>
+      out.innerHTML = `<p style="font-size:13px;color:var(--text-muted);margin-bottom:12px">Reviews for <strong>${esc(d.book_title)}</strong></p>` +
+        d.data.map(rv => `<div style="padding:14px;border-bottom:1px solid var(--border)">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
+            <strong style="font-size:14px">${esc(rv.Reviewer)}</strong>
+            <span class="stars">${'★'.repeat(rv.Rating)}${'☆'.repeat(5-rv.Rating)}</span>
           </div>
-        `).join('');
+          <p style="font-size:14px;color:var(--text-muted);margin-bottom:4px">${esc(rv.Comment)}</p>
+          <p style="font-size:12px;color:var(--text-muted)">${esc(rv.Date)}</p>
+        </div>`).join('');
     } else if (d.success) {
       out.innerHTML = `<div class="alert alert-error">No reviews yet for <strong>${esc(d.book_title)}</strong>.</div>`;
     } else {
@@ -748,7 +630,6 @@ async function viewReviewsByName() {
   } catch(e) { out.innerHTML = `<div class="alert alert-error">${e.message}</div>`; }
 }
 
-// resolve book name before writing review
 async function resolveBookForReview() {
   const name = document.getElementById('writeReviewBookName').value.trim();
   const resultsDiv = document.getElementById('bookSearchResults');
@@ -757,7 +638,7 @@ async function resolveBookForReview() {
   if (!name) return;
   resultsDiv.innerHTML = '<span class="spinner"></span>';
   try {
-    const r = await fetch(API + `/books/by-name?title=${encodeURIComponent(name)}`);
+    const r = await fetch(API + `/api/books/by-name?title=${encodeURIComponent(name)}`);
     const d = await r.json();
     if (d.success && d.data.length) {
       if (d.data.length === 1) {
@@ -767,7 +648,7 @@ async function resolveBookForReview() {
         resultsDiv.innerHTML = `<div style="border:1.5px solid var(--border);border-radius:8px;overflow:hidden">` +
           d.data.map(b => `<div style="padding:10px 14px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;font-size:14px">
             <span><strong>${esc(b.Title)}</strong> — ${esc(b.Author)}</span>
-            <button class="btn btn-ghost btn-sm" onclick="selectBookForReview(${b.Book_id}, '${esc(b.Title)}')">Select</button>
+            <button class="btn btn-ghost btn-sm" onclick="selectBookForReview(${b.Book_id},'${esc(b.Title)}')">Select</button>
           </div>`).join('') + '</div>';
       }
     } else {
@@ -782,10 +663,8 @@ function selectBookForReview(id, title) {
   document.getElementById('bookSearchResults').innerHTML = `<div class="alert alert-success" style="font-size:13px">Selected: <strong>${esc(title)}</strong></div>`;
 }
 
-let currentRating = 0;
 function setRating(val) {
   currentRating = val;
-  document.getElementById('selectedRating').value = val;
   document.querySelectorAll('#starPicker span').forEach((s, i) => {
     s.textContent = i < val ? '★' : '☆';
     s.style.color = i < val ? 'var(--accent)' : 'var(--text-muted)';
@@ -796,15 +675,14 @@ async function submitReview() {
   clearAlert('writeReviewAlert');
   if (!selectedBookIdForReview) return showAlert('writeReviewAlert', 'Please find and select a book first.');
   if (!currentRating) return showAlert('writeReviewAlert', 'Please select a rating.');
-  const comment = document.getElementById('reviewComment').value.trim();
-  const payload = { user_id: currentUser.User_id, book_id: selectedBookIdForReview, rating: currentRating, comment };
+  const payload = { user_id: currentUser.User_id, book_id: selectedBookIdForReview, rating: currentRating, comment: document.getElementById('reviewComment').value.trim() };
   try {
-    const r = await fetch(API + '/reviews', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload) });
+    const r = await fetch(API + '/api/reviews', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload) });
     const d = await r.json();
     if (d.success) {
       showAlert('writeReviewAlert', 'Review submitted successfully!', 'success');
       document.getElementById('reviewComment').value = '';
-      setRating(0);
+      setRating(0); currentRating = 0;
       selectedBookIdForReview = null;
       document.getElementById('writeReviewForm').classList.add('hidden');
       document.getElementById('bookSearchResults').innerHTML = '';
@@ -814,15 +692,6 @@ async function submitReview() {
     }
   } catch(e) { showAlert('writeReviewAlert', e.message); }
 }
-
-// ── init ──────────────────────────────────────────────────────────────────
-window.addEventListener('load', async () => {
-  try {
-    await fetch(API + '/api/categories');
-  } catch(e) {
-    console.warn('API not reachable:', e.message);
-  }
-});
 </script>
 </body>
 </html>
