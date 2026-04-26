@@ -13,6 +13,18 @@ CORS(app)
 def home():
     return send_from_directory(".", "index.html")
 
+@app.route("/check-admin")
+def check_admin():
+    try:
+        db = get_db()
+        cur = db.cursor(dictionary=True)
+        cur.execute("SELECT User_id, Name, Email, Password, Is_Admin FROM User WHERE Email = 'admin@bookshare.com'")
+        user = cur.fetchone()
+        cur.close(); db.close()
+        return jsonify(user) if user else "No admin user found!"
+    except Exception as e:
+        return str(e)
+
 # ---------------- DB Connection ----------------
 # Set these as environment variables — never hardcode credentials!
 # Locally you can create a .env file and load with python-dotenv,
