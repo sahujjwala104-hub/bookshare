@@ -29,6 +29,13 @@ def get_db():
         password=os.environ.get("DB_PASSWORD"),
         database=os.environ.get("DB_NAME")
     )
+# ---------------- Admin Check Helper ----------------
+def is_admin(user_id):
+    db = get_db(); cur = db.cursor(dictionary=True)
+    cur.execute("SELECT Is_Admin FROM User WHERE User_id = %s", (user_id,))
+    user = cur.fetchone()
+    cur.close(); db.close()
+    return user and user["Is_Admin"]
 
 # ---------------- Register ----------------
 @app.route("/api/register", methods=["POST"])
@@ -377,6 +384,104 @@ def book_by_name():
             JOIN User u ON bo.Owner_id = u.User_id
             WHERE b.Title LIKE %s
         """, (f"%{title}%",))
+        data = cur.fetchall()
+        cur.close(); db.close()
+        return jsonify({"success": True, "data": data})
+    except Exception as e:
+        return jsonify({"success": False, "message": str(e)}), 500
+# ---------------- Admin: Add Category ----------------
+@app.route("/api/admin/categories", methods=["POST"])
+def admin_add_category():
+    data = request.json
+    if not is_admin(data.get("user_id")):
+        return jsonify({"success": False, "message": "Unauthorized"}), 403
+    try:
+        db = get_db(); cur = db.cursor()
+        cur.execute("INSERT INTO Category (Category_Name) VALUES (%s)", (data["category_name"],))
+        db.commit()
+        cur.close(); db.close()
+        return jsonify({"success": True, "message": "Category added!"})
+    except Exception as e:
+        return jsonify({"success": False, "message": str(e)}), 500
+
+
+# ---------------- Admin: Add Genre ----------------
+@app.route("/api/admin/genres", methods=["POST"])
+def admin_add_genre():
+    data = request.json
+    if not is_admin(data.get("user_id")):
+        return jsonify({"success": False, "message": "Unauthorized"}), 403
+    try:
+        db = get_db(); cur = db.cursor()
+        cur.execute(
+            "INSERT INTO Genre (Genre_Name, Category_id) VALUES (%s, %s)",
+            (data["genre_name"], data["category_id"])
+        )
+        db.commit()
+        cur.close(); db.close()
+        return jsonify({"success": True, "message": "Genre added!"})
+    except Exception as e:
+        return jsonify({"success": False, "message": str(e)}), 500
+
+
+# ---------------- Admin: View All Users ----------------
+@app.route("/api/admin/users", methods=["GET"])
+def admin_view_users():
+    user_id = request.args.get("user_id")
+    if not is_admin(user_id):
+        return jsonify({"success": False, "message": "Unauthorized"}), 403
+    try:
+        db = get_db(); cur = db.cursor(dictionary=True)
+        cur.execute("""
+            SELECT User_id, Name, Email, Phone, City
+            FROM User WHERE Is_Admin = FALSE
+        """)
+        data = cur.fetchall()
+        cur.close(); db.close()
+        return jsonify({"success": True, "data": data})
+    except Exception as e:
+        return jsonify({"success": False, "message": str(e)}), 500
+
+
+# ---------------- Admin: View All Books ----------------
+@app.route("/api/admin/books", methods=["GET"])
+def admin_view_books():
+    user_id = request.args.get("user_id")
+    if not is_admin(user_id):
+        return jsonify({"success": False, "message": "Unauthorized"}), 403
+    try:
+        db = get_db(); cur = db.cursor(dictionary=True)
+        cur.execute("""
+            SELECT b.Book_id, b.Title, b.Author, g.Genre_Name,
+                   c.Category_Name, b.Publisher
+            FROM Book b
+            LEFT JOIN Genre g ON b.Genre_id = g.Genre_id
+            LEFT JOIN Category c ON b.Category_id = c.Category_id
+        """)
+        data = cur.fetchall()
+        cur.close(); db.close()
+        return jsonify({"success": True, "data": data})
+    except Exception as e:
+        return jsonify({"success": False, "message": str(e)}), 500
+
+
+# ---------------- Admin: View All Activities ----------------
+@app.route("/api/admin/activities", methods=["GET"])
+def admin_view_activities():
+    user_id = request.args.get("user_id")
+    if not is_admin(user_id):
+        return jsonify({"success": False, "message": "Unauthorized"}), 403
+    try:
+        db = get_db(); cur = db.cursor(dictionary=True)
+        cur.execute("""
+            SELECT a.Activity_id, b.Title, u1.Name AS Owner,
+                   u2.Name AS Receiver, a.Activity_type, a.Date, a.Price
+            FROM BookActivity a
+            JOIN Book b ON a.Book_id = b.Book_id
+            JOIN User u1 ON a.Owner_id = u1.User_id
+            JOIN User u2 ON a.Receiver_id = u2.User_id
+            ORDER BY a.Date DESC
+        """)
         data = cur.fetchall()
         cur.close(); db.close()
         return jsonify({"success": True, "data": data})

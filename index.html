@@ -12,6 +12,7 @@
       --text: #1e1e1e; --text-muted: #6b6560; --border: #ddd8ce;
       --success-bg: #eaf2ec; --success-text: #2d6a3f;
       --error-bg: #f9eded; --error-text: #8b3a3a;
+      --admin-bg: #f0f4ff; --admin-border: #c5d0f0; --admin-text: #2d3a8a;
       --radius: 10px; --shadow: 0 2px 12px rgba(0,0,0,0.07);
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -24,6 +25,8 @@
     .btn-primary:hover { background: var(--primary-light); }
     .btn-ghost { background: transparent; color: var(--primary); border: 1.5px solid var(--primary); }
     .btn-ghost:hover { background: var(--surface2); }
+    .btn-admin { background: #3a4fa8; color: #fff; }
+    .btn-admin:hover { background: #2d3e8a; }
     .btn-sm { padding: 5px 12px; font-size: 13px; }
     .btn-full { width: 100%; }
     .btn:disabled { opacity: .6; cursor: not-allowed; }
@@ -42,6 +45,7 @@
     .logo span { color: var(--accent); }
     .header-actions { display: flex; gap: 10px; align-items: center; }
     .user-chip { background: var(--surface2); border-radius: 20px; padding: 5px 14px; font-size: 13px; color: var(--text-muted); }
+    .admin-chip { background: var(--admin-bg); border-radius: 20px; padding: 5px 14px; font-size: 13px; color: var(--admin-text); font-weight: 600; border: 1.5px solid var(--admin-border); }
     .auth-wrap { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; background: var(--bg); }
     .auth-card { background: var(--surface); border-radius: 16px; padding: 40px; width: 100%; max-width: 480px; box-shadow: 0 4px 24px rgba(0,0,0,0.09); border: 1.5px solid var(--border); }
     .auth-logo { text-align: center; font-family: 'Lora', serif; font-size: 32px; color: var(--primary); margin-bottom: 6px; }
@@ -53,9 +57,12 @@
     .dash-greeting { margin-bottom: 24px; }
     .dash-greeting h2 { font-size: 24px; }
     .dash-greeting p { color: var(--text-muted); font-size: 14px; margin-top: 4px; }
+    .admin-banner { background: var(--admin-bg); border: 1.5px solid var(--admin-border); border-radius: 10px; padding: 12px 18px; margin-bottom: 20px; font-size: 14px; color: var(--admin-text); font-weight: 500; display: flex; align-items: center; gap: 10px; }
     .nav-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 14px; }
     .nav-card { background: var(--surface); border: 1.5px solid var(--border); border-radius: var(--radius); padding: 22px 18px; cursor: pointer; transition: border-color .2s, box-shadow .2s, transform .15s; text-align: center; }
     .nav-card:hover { border-color: var(--primary); box-shadow: 0 4px 16px rgba(61,90,76,.12); transform: translateY(-3px); }
+    .nav-card.admin-card { border-color: var(--admin-border); }
+    .nav-card.admin-card:hover { border-color: #3a4fa8; box-shadow: 0 4px 16px rgba(58,79,168,.15); }
     .nav-card .icon { font-size: 30px; margin-bottom: 10px; }
     .nav-card .label { font-weight: 600; font-size: 14px; }
     .nav-card .sublabel { font-size: 12px; color: var(--text-muted); margin-top: 3px; }
@@ -73,6 +80,7 @@
     .badge-green { background: var(--success-bg); color: var(--success-text); }
     .badge-red { background: var(--error-bg); color: var(--error-text); }
     .badge-amber { background: #fef3e2; color: #92540a; }
+    .badge-blue { background: var(--admin-bg); color: var(--admin-text); }
     .search-bar { display: flex; gap: 10px; margin-bottom: 18px; }
     .search-bar .form-input { flex: 1; }
     .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.45); z-index: 999; align-items: center; justify-content: center; }
@@ -151,7 +159,7 @@
     <div class="header-inner">
       <div class="logo">Book<span>Share</span></div>
       <div class="header-actions">
-        <span class="user-chip" id="userChip"></span>
+        <span id="userChip" class="user-chip"></span>
         <button class="btn btn-ghost btn-sm" onclick="goHome()">Home</button>
         <button class="btn btn-sm" style="background:var(--surface2);color:var(--text)" onclick="handleLogout()">Logout</button>
       </div>
@@ -163,15 +171,31 @@
     <div id="dashboard">
       <div class="dash-greeting">
         <h2 id="dashGreeting">Good to see you!</h2>
-        <p>What would you like to do today?</p>
+        <p id="dashSubtitle">What would you like to do today?</p>
       </div>
-      <div class="nav-grid">
+
+      <!-- Admin banner (only shown to admins) -->
+      <div id="adminBanner" class="admin-banner hidden">
+        🛡️ You are logged in as <strong>Admin</strong>. You have full access to manage the platform.
+      </div>
+
+      <!-- USER nav cards (shown to normal users) -->
+      <div class="nav-grid" id="userNavGrid">
         <div class="nav-card" onclick="showSection('addBook'); loadCategories()"><div class="icon">➕</div><div class="label">Add Book</div><div class="sublabel">List your book</div></div>
         <div class="nav-card" onclick="showSection('browseBooks'); loadBrowseBooks()"><div class="icon">📖</div><div class="label">Browse</div><div class="sublabel">Find available books</div></div>
         <div class="nav-card" onclick="showSection('searchBooks')"><div class="icon">🔍</div><div class="label">Search</div><div class="sublabel">By title, author, genre</div></div>
         <div class="nav-card" onclick="showSection('myBooks'); loadMyBooks()"><div class="icon">📚</div><div class="label">My Books</div><div class="sublabel">Books you listed</div></div>
         <div class="nav-card" onclick="showSection('myActivities'); loadMyActivities()"><div class="icon">📋</div><div class="label">Activities</div><div class="sublabel">Your transactions</div></div>
         <div class="nav-card" onclick="showSection('reviews')"><div class="icon">⭐</div><div class="label">Reviews</div><div class="sublabel">Read &amp; write reviews</div></div>
+      </div>
+
+      <!-- ADMIN nav cards (shown only to admins) -->
+      <div class="nav-grid hidden" id="adminNavGrid">
+        <div class="nav-card admin-card" onclick="showSection('adminCategories')"><div class="icon">🗂️</div><div class="label">Add Category</div><div class="sublabel">Manage categories</div></div>
+        <div class="nav-card admin-card" onclick="showSection('adminGenres'); adminLoadCategories()"><div class="icon">🎭</div><div class="label">Add Genre</div><div class="sublabel">Manage genres</div></div>
+        <div class="nav-card admin-card" onclick="showSection('adminUsers'); adminLoadUsers()"><div class="icon">👥</div><div class="label">All Users</div><div class="sublabel">View registered users</div></div>
+        <div class="nav-card admin-card" onclick="showSection('adminBooks'); adminLoadBooks()"><div class="icon">📚</div><div class="label">All Books</div><div class="sublabel">View all listings</div></div>
+        <div class="nav-card admin-card" onclick="showSection('adminActivities'); adminLoadActivities()"><div class="icon">📋</div><div class="label">All Activities</div><div class="sublabel">View all transactions</div></div>
       </div>
     </div>
 
@@ -298,8 +322,69 @@
       </div>
     </div>
 
-  </div>
-</div>
+    <!-- ======== ADMIN SECTIONS ======== -->
+
+    <!-- Admin: Add Category -->
+    <div id="adminCategories" class="section-card hidden">
+      <div class="section-header"><button class="btn btn-ghost btn-sm" onclick="showDashboard()">← Back</button><h2 class="section-title">Add Category</h2></div>
+      <div id="adminCatAlert"></div>
+      <div class="form-group">
+        <label class="form-label">Category Name</label>
+        <input id="adminCatName" class="form-input" placeholder="e.g. Fiction" />
+      </div>
+      <button class="btn btn-admin" onclick="adminAddCategory()">Add Category</button>
+    </div>
+
+    <!-- Admin: Add Genre -->
+    <div id="adminGenres" class="section-card hidden">
+      <div class="section-header"><button class="btn btn-ghost btn-sm" onclick="showDashboard()">← Back</button><h2 class="section-title">Add Genre</h2></div>
+      <div id="adminGenreAlert"></div>
+      <div class="form-group">
+        <label class="form-label">Genre Name</label>
+        <input id="adminGenreName" class="form-input" placeholder="e.g. Mystery" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">Category</label>
+        <select id="adminGenreCategory" class="form-select"><option value="">Select Category</option></select>
+      </div>
+      <button class="btn btn-admin" onclick="adminAddGenre()">Add Genre</button>
+    </div>
+
+    <!-- Admin: All Users -->
+    <div id="adminUsers" class="section-card hidden">
+      <div class="section-header"><button class="btn btn-ghost btn-sm" onclick="showDashboard()">← Back</button><h2 class="section-title">All Users</h2></div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>ID</th><th>Name</th><th>Email</th><th>Phone</th><th>City</th></tr></thead>
+          <tbody id="adminUsersBody"><tr class="empty-row"><td colspan="5"><span class="spinner"></span> Loading…</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Admin: All Books -->
+    <div id="adminBooks" class="section-card hidden">
+      <div class="section-header"><button class="btn btn-ghost btn-sm" onclick="showDashboard()">← Back</button><h2 class="section-title">All Books</h2></div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>ID</th><th>Title</th><th>Author</th><th>Genre</th><th>Category</th><th>Publisher</th></tr></thead>
+          <tbody id="adminBooksBody"><tr class="empty-row"><td colspan="6"><span class="spinner"></span> Loading…</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Admin: All Activities -->
+    <div id="adminActivities" class="section-card hidden">
+      <div class="section-header"><button class="btn btn-ghost btn-sm" onclick="showDashboard()">← Back</button><h2 class="section-title">All Activities</h2></div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>ID</th><th>Book</th><th>Owner</th><th>Receiver</th><th>Type</th><th>Date</th><th>Price</th></tr></thead>
+          <tbody id="adminActivitiesBody"><tr class="empty-row"><td colspan="7"><span class="spinner"></span> Loading…</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+
+  </div><!-- end .main-wrap -->
+</div><!-- end #mainApp -->
 
 <!-- Request Modal -->
 <div id="requestModal" class="modal-overlay">
@@ -319,6 +404,12 @@ let selectedBookIdForReview = null;
 let currentRating = 0;
 let pendingRequest = null;
 
+// All section IDs (user + admin)
+const ALL_SECTIONS = [
+  'addBook','browseBooks','searchBooks','myBooks','myActivities','reviews',
+  'adminCategories','adminGenres','adminUsers','adminBooks','adminActivities'
+];
+
 function esc(s) {
   if (s == null) return '';
   return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -334,19 +425,40 @@ function goHome() { hideAllPages(); document.getElementById('landingPage').class
 function handleLogout() { currentUser = null; goHome(); }
 
 function showDashboard() {
-  ['addBook','browseBooks','searchBooks','myBooks','myActivities','reviews'].forEach(id => document.getElementById(id).classList.add('hidden'));
+  ALL_SECTIONS.forEach(id => document.getElementById(id).classList.add('hidden'));
   document.getElementById('dashboard').classList.remove('hidden');
 }
+
 function showSection(id) {
   document.getElementById('dashboard').classList.add('hidden');
-  ['addBook','browseBooks','searchBooks','myBooks','myActivities','reviews'].forEach(s => document.getElementById(s).classList.add('hidden'));
+  ALL_SECTIONS.forEach(s => document.getElementById(s).classList.add('hidden'));
   document.getElementById(id).classList.remove('hidden');
 }
+
 function enterApp() {
   hideAllPages();
   document.getElementById('mainApp').classList.remove('hidden');
-  document.getElementById('userChip').textContent = currentUser.Name;
-  document.getElementById('dashGreeting').textContent = `Hello, ${currentUser.Name}!`;
+
+  if (currentUser.Is_Admin) {
+    // Admin: show admin chip, admin banner, admin nav
+    document.getElementById('userChip').className = 'admin-chip';
+    document.getElementById('userChip').textContent = '🛡️ ' + currentUser.Name + ' (Admin)';
+    document.getElementById('dashGreeting').textContent = `Admin Panel — Welcome, ${currentUser.Name}!`;
+    document.getElementById('dashSubtitle').textContent = 'Manage the BookShare platform.';
+    document.getElementById('adminBanner').classList.remove('hidden');
+    document.getElementById('adminNavGrid').classList.remove('hidden');
+    document.getElementById('userNavGrid').classList.add('hidden');
+  } else {
+    // Normal user: show user chip, user nav
+    document.getElementById('userChip').className = 'user-chip';
+    document.getElementById('userChip').textContent = currentUser.Name;
+    document.getElementById('dashGreeting').textContent = `Hello, ${currentUser.Name}!`;
+    document.getElementById('dashSubtitle').textContent = 'What would you like to do today?';
+    document.getElementById('adminBanner').classList.add('hidden');
+    document.getElementById('userNavGrid').classList.remove('hidden');
+    document.getElementById('adminNavGrid').classList.add('hidden');
+  }
+
   showDashboard();
 }
 
@@ -691,6 +803,112 @@ async function submitReview() {
       showAlert('writeReviewAlert', d.message || 'Could not submit review.');
     }
   } catch(e) { showAlert('writeReviewAlert', e.message); }
+}
+
+// ── ADMIN FUNCTIONS ──
+
+async function adminLoadCategories() {
+  try {
+    const r = await fetch(API + '/api/categories');
+    const d = await r.json();
+    const sel = document.getElementById('adminGenreCategory');
+    sel.innerHTML = '<option value="">Select Category</option>';
+    if (d.success) d.data.forEach(c => sel.innerHTML += `<option value="${c.Category_id}">${esc(c.Category_Name)}</option>`);
+  } catch(e) {}
+}
+
+async function adminAddCategory() {
+  clearAlert('adminCatAlert');
+  const name = document.getElementById('adminCatName').value.trim();
+  if (!name) return showAlert('adminCatAlert', 'Category name is required.');
+  try {
+    const r = await fetch(API + '/api/admin/categories', {
+      method: 'POST', headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ user_id: currentUser.User_id, category_name: name })
+    });
+    const d = await r.json();
+    if (d.success) { showAlert('adminCatAlert', 'Category added!', 'success'); document.getElementById('adminCatName').value = ''; }
+    else showAlert('adminCatAlert', d.message || 'Error.');
+  } catch(e) { showAlert('adminCatAlert', e.message); }
+}
+
+async function adminAddGenre() {
+  clearAlert('adminGenreAlert');
+  const name = document.getElementById('adminGenreName').value.trim();
+  const category_id = document.getElementById('adminGenreCategory').value;
+  if (!name || !category_id) return showAlert('adminGenreAlert', 'Both fields are required.');
+  try {
+    const r = await fetch(API + '/api/admin/genres', {
+      method: 'POST', headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ user_id: currentUser.User_id, genre_name: name, category_id })
+    });
+    const d = await r.json();
+    if (d.success) { showAlert('adminGenreAlert', 'Genre added!', 'success'); document.getElementById('adminGenreName').value = ''; }
+    else showAlert('adminGenreAlert', d.message || 'Error.');
+  } catch(e) { showAlert('adminGenreAlert', e.message); }
+}
+
+async function adminLoadUsers() {
+  const body = document.getElementById('adminUsersBody');
+  body.innerHTML = '<tr class="empty-row"><td colspan="5"><span class="spinner"></span> Loading…</td></tr>';
+  try {
+    const r = await fetch(API + `/api/admin/users?user_id=${encodeURIComponent(currentUser.User_id)}`);
+    const d = await r.json();
+    if (d.success && d.data.length) {
+      body.innerHTML = d.data.map(u => `<tr>
+        <td>${u.User_id}</td>
+        <td><strong>${esc(u.Name)}</strong></td>
+        <td>${esc(u.Email)}</td>
+        <td>${esc(u.Phone)}</td>
+        <td>${esc(u.City)}</td>
+      </tr>`).join('');
+    } else {
+      body.innerHTML = '<tr class="empty-row"><td colspan="5">No users found.</td></tr>';
+    }
+  } catch(e) { body.innerHTML = `<tr class="empty-row"><td colspan="5">Error: ${e.message}</td></tr>`; }
+}
+
+async function adminLoadBooks() {
+  const body = document.getElementById('adminBooksBody');
+  body.innerHTML = '<tr class="empty-row"><td colspan="6"><span class="spinner"></span> Loading…</td></tr>';
+  try {
+    const r = await fetch(API + `/api/admin/books?user_id=${encodeURIComponent(currentUser.User_id)}`);
+    const d = await r.json();
+    if (d.success && d.data.length) {
+      body.innerHTML = d.data.map(b => `<tr>
+        <td>${b.Book_id}</td>
+        <td><strong>${esc(b.Title)}</strong></td>
+        <td>${esc(b.Author)}</td>
+        <td>${esc(b.Genre_Name || '—')}</td>
+        <td>${esc(b.Category_Name || '—')}</td>
+        <td>${esc(b.Publisher || '—')}</td>
+      </tr>`).join('');
+    } else {
+      body.innerHTML = '<tr class="empty-row"><td colspan="6">No books found.</td></tr>';
+    }
+  } catch(e) { body.innerHTML = `<tr class="empty-row"><td colspan="6">Error: ${e.message}</td></tr>`; }
+}
+
+async function adminLoadActivities() {
+  const body = document.getElementById('adminActivitiesBody');
+  body.innerHTML = '<tr class="empty-row"><td colspan="7"><span class="spinner"></span> Loading…</td></tr>';
+  try {
+    const r = await fetch(API + `/api/admin/activities?user_id=${encodeURIComponent(currentUser.User_id)}`);
+    const d = await r.json();
+    if (d.success && d.data.length) {
+      body.innerHTML = d.data.map(a => `<tr>
+        <td>${a.Activity_id}</td>
+        <td><strong>${esc(a.Title)}</strong></td>
+        <td>${esc(a.Owner)}</td>
+        <td>${esc(a.Receiver)}</td>
+        <td>${badgeType(a.Activity_type)}</td>
+        <td>${esc(a.Date)}</td>
+        <td>₹${a.Price || 0}</td>
+      </tr>`).join('');
+    } else {
+      body.innerHTML = '<tr class="empty-row"><td colspan="7">No activities found.</td></tr>';
+    }
+  } catch(e) { body.innerHTML = `<tr class="empty-row"><td colspan="7">Error: ${e.message}</td></tr>`; }
 }
 </script>
 </body>
