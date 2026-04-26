@@ -611,7 +611,7 @@ async function performSearch() {
 // ── my books ──
 async function loadMyBooks() {
   const body = document.getElementById('myBooksBody');
-  body.innerHTML = '<tr class="empty-row"><td colspan="5"><span class="spinner"></span> Loading…</td></tr>';
+  body.innerHTML = '<tr class="empty-row"><td colspan="6"><span class="spinner"></span> Loading…</td></tr>';
   try {
     const r = await fetch(API + `/api/books/my-books?user_id=${encodeURIComponent(currentUser.User_id)}`);
     const d = await r.json();
@@ -625,9 +625,9 @@ async function loadMyBooks() {
         <td>${b.Available ? `<button class="btn btn-sm" style="background:#f9eded;color:#8b3a3a;border:1.5px solid #e8c4c4" onclick="deleteBook(${b.Book_id})">Delete</button>` : '—'}</td>
       </tr>`).join('');
     } else {
-      body.innerHTML = '<tr class="empty-row"><td colspan="5">You haven\'t listed any books yet.</td></tr>';
+     body.innerHTML = '<tr class="empty-row"><td colspan="6">You haven\'t listed any books yet.</td></tr>';
     }
-  } catch(e) { body.innerHTML = `<tr class="empty-row"><td colspan="5">Error: ${e.message}</td></tr>`; }
+  } catch(e) { body.innerHTML = `<tr class="empty-row"><td colspan="6">Error: ${e.message}</td></tr>`; }
 }
 
 async function deleteBook(bookId) {

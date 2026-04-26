@@ -16,13 +16,7 @@ def home():
 
 
 # ---------------- DB Connection ----------------
-# Set these as environment variables — never hardcode credentials!
-# Locally you can create a .env file and load with python-dotenv,
-# or just export them in your terminal before running the app:
-#   export DB_HOST=localhost
-#   export DB_USER=root
-#   export DB_PASSWORD=your_password
-#   export DB_NAME=bookshare
+
 def get_db():
     return mysql.connector.connect(
         host=os.environ.get("DB_HOST"),
@@ -184,13 +178,14 @@ def search_books():
         return jsonify({"success": False, "message": str(e)}), 500
 
 # ---------------- My Books ----------------
+# ---------------- My Books ----------------
 @app.route("/api/books/my-books", methods=["GET"])
 def my_books():
     try:
         user_id = request.args.get("user_id")
         db = get_db(); cur = db.cursor(dictionary=True)
         cur.execute("""
-            SELECT b.Title, b.Author, bo.Activity_type, bo.Price, bo.Available
+            SELECT b.Book_id, b.Title, b.Author, bo.Activity_type, bo.Price, bo.Available
             FROM Book b JOIN BookOwner bo ON b.Book_id = bo.Book_id
             WHERE bo.Owner_id = %s
         """, (user_id,))
