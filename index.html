@@ -1,0 +1,828 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>BookShare</title>
+  <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;600&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #f7f4ef;
+      --surface: #ffffff;
+      --surface2: #f0ece4;
+      --primary: #3d5a4c;
+      --primary-light: #4e7360;
+      --accent: #c07c45;
+      --text: #1e1e1e;
+      --text-muted: #6b6560;
+      --border: #ddd8ce;
+      --success-bg: #eaf2ec;
+      --success-text: #2d6a3f;
+      --error-bg: #f9eded;
+      --error-text: #8b3a3a;
+      --radius: 10px;
+      --shadow: 0 2px 12px rgba(0,0,0,0.07);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; min-height: 100vh; }
+
+    /* Typography */
+    h1, h2, h3 { font-family: 'Lora', serif; font-weight: 600; }
+
+    /* Utils */
+    .hidden { display: none !important; }
+    .center { text-align: center; }
+
+    /* Buttons */
+    .btn { padding: 9px 20px; border: none; border-radius: var(--radius); cursor: pointer; font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 500; transition: background .2s, transform .1s; display: inline-block; }
+    .btn:active { transform: scale(.98); }
+    .btn-primary { background: var(--primary); color: #fff; }
+    .btn-primary:hover { background: var(--primary-light); }
+    .btn-accent { background: var(--accent); color: #fff; }
+    .btn-accent:hover { background: #b06e38; }
+    .btn-ghost { background: transparent; color: var(--primary); border: 1.5px solid var(--primary); }
+    .btn-ghost:hover { background: var(--surface2); }
+    .btn-sm { padding: 5px 12px; font-size: 13px; }
+    .btn-full { width: 100%; }
+    .btn:disabled { opacity: .6; cursor: not-allowed; }
+
+    /* Alerts */
+    .alert { padding: 10px 14px; border-radius: 8px; font-size: 14px; margin-bottom: 14px; }
+    .alert-success { background: var(--success-bg); color: var(--success-text); }
+    .alert-error { background: var(--error-bg); color: var(--error-text); }
+
+    /* Forms */
+    .form-group { margin-bottom: 14px; }
+    .form-label { display: block; font-size: 13px; font-weight: 600; color: var(--text-muted); margin-bottom: 5px; text-transform: uppercase; letter-spacing: .04em; }
+    .form-input, .form-select, .form-textarea {
+      width: 100%; padding: 9px 12px; border: 1.5px solid var(--border);
+      border-radius: 8px; font-family: 'DM Sans', sans-serif; font-size: 14px;
+      background: var(--surface); color: var(--text); transition: border .2s;
+    }
+    .form-input:focus, .form-select:focus, .form-textarea:focus { outline: none; border-color: var(--primary); }
+    .form-textarea { min-height: 90px; resize: vertical; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+    /* Header */
+    .header { background: var(--surface); border-bottom: 1.5px solid var(--border); padding: 14px 0; position: sticky; top: 0; z-index: 100; }
+    .header-inner { max-width: 1100px; margin: 0 auto; padding: 0 24px; display: flex; justify-content: space-between; align-items: center; }
+    .logo { font-family: 'Lora', serif; font-size: 22px; color: var(--primary); font-weight: 600; }
+    .logo span { color: var(--accent); }
+    .header-actions { display: flex; gap: 10px; align-items: center; }
+    .user-chip { background: var(--surface2); border-radius: 20px; padding: 5px 14px; font-size: 13px; color: var(--text-muted); }
+
+    /* Auth pages */
+    .auth-wrap { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; background: var(--bg); }
+    .auth-card { background: var(--surface); border-radius: 16px; padding: 40px; width: 100%; max-width: 480px; box-shadow: 0 4px 24px rgba(0,0,0,0.09); border: 1.5px solid var(--border); }
+    .auth-logo { text-align: center; font-family: 'Lora', serif; font-size: 32px; color: var(--primary); margin-bottom: 6px; }
+    .auth-sub { text-align: center; color: var(--text-muted); font-size: 14px; margin-bottom: 28px; }
+    .auth-switch { text-align: center; margin-top: 16px; font-size: 14px; color: var(--text-muted); }
+    .auth-switch a { color: var(--primary); cursor: pointer; font-weight: 500; }
+
+    /* Landing buttons */
+    .landing-btns { display: flex; flex-direction: column; gap: 10px; margin-top: 24px; }
+
+    /* Main layout */
+    .main-wrap { max-width: 1100px; margin: 0 auto; padding: 28px 24px; }
+
+    /* Dashboard grid */
+    .dash-greeting { margin-bottom: 24px; }
+    .dash-greeting h2 { font-size: 24px; }
+    .dash-greeting p { color: var(--text-muted); font-size: 14px; margin-top: 4px; }
+    .nav-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 14px; }
+    .nav-card { background: var(--surface); border: 1.5px solid var(--border); border-radius: var(--radius); padding: 22px 18px; cursor: pointer; transition: border-color .2s, box-shadow .2s, transform .15s; text-align: center; }
+    .nav-card:hover { border-color: var(--primary); box-shadow: 0 4px 16px rgba(61,90,76,.12); transform: translateY(-3px); }
+    .nav-card .icon { font-size: 30px; margin-bottom: 10px; }
+    .nav-card .label { font-weight: 600; font-size: 14px; }
+    .nav-card .sublabel { font-size: 12px; color: var(--text-muted); margin-top: 3px; }
+
+    /* Section cards */
+    .section-card { background: var(--surface); border-radius: 14px; border: 1.5px solid var(--border); padding: 24px; box-shadow: var(--shadow); }
+    .section-header { display: flex; align-items: center; gap: 14px; margin-bottom: 20px; }
+    .section-title { font-family: 'Lora', serif; font-size: 20px; }
+
+    /* Tables */
+    .table-wrap { overflow-x: auto; border-radius: 8px; border: 1.5px solid var(--border); }
+    table { width: 100%; border-collapse: collapse; font-size: 14px; }
+    thead th { background: var(--surface2); padding: 11px 14px; text-align: left; font-size: 12px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: .04em; border-bottom: 1.5px solid var(--border); }
+    tbody td { padding: 11px 14px; border-bottom: 1px solid var(--border); color: var(--text); }
+    tbody tr:last-child td { border-bottom: none; }
+    tbody tr:hover { background: var(--bg); }
+    .empty-row td { text-align: center; color: var(--text-muted); padding: 32px; }
+
+    /* Badge */
+    .badge { display: inline-block; padding: 2px 10px; border-radius: 20px; font-size: 12px; font-weight: 500; }
+    .badge-green { background: var(--success-bg); color: var(--success-text); }
+    .badge-red { background: var(--error-bg); color: var(--error-text); }
+    .badge-amber { background: #fef3e2; color: #92540a; }
+
+    /* Search bar */
+    .search-bar { display: flex; gap: 10px; margin-bottom: 18px; }
+    .search-bar .form-input { flex: 1; }
+
+    /* Modal */
+    .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.45); z-index: 999; align-items: center; justify-content: center; }
+    .modal-overlay.active { display: flex; }
+    .modal-box { background: var(--surface); border-radius: 14px; padding: 28px; width: 90%; max-width: 480px; max-height: 90vh; overflow-y: auto; box-shadow: 0 8px 40px rgba(0,0,0,.15); }
+    .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; }
+    .modal-header h3 { font-family: 'Lora', serif; font-size: 18px; }
+    .modal-close { background: none; border: none; font-size: 22px; cursor: pointer; color: var(--text-muted); line-height: 1; }
+
+    /* Book detail in modal */
+    .book-detail { background: var(--surface2); border-radius: 10px; padding: 16px; margin-bottom: 16px; }
+    .book-detail p { font-size: 14px; margin-bottom: 6px; color: var(--text-muted); }
+    .book-detail p strong { color: var(--text); }
+    .seller-contact { background: #eef6f1; border: 1.5px solid #b2d9bf; border-radius: 10px; padding: 14px 16px; margin-top: 14px; }
+    .seller-contact h4 { font-size: 14px; font-weight: 600; color: var(--success-text); margin-bottom: 8px; }
+    .seller-contact p { font-size: 14px; color: var(--text); margin-bottom: 4px; }
+    .cod-note { background: #fef3e2; border: 1.5px solid #f5c97a; border-radius: 8px; padding: 10px 14px; font-size: 13px; color: #7a4f0d; margin-top: 12px; }
+
+    /* Stars */
+    .stars { color: var(--accent); font-size: 16px; }
+
+    /* Review form inside section */
+    .review-tabs { display: flex; gap: 0; margin-bottom: 20px; border: 1.5px solid var(--border); border-radius: 8px; overflow: hidden; width: fit-content; }
+    .review-tab { padding: 8px 20px; font-size: 13px; font-weight: 500; cursor: pointer; background: var(--surface); color: var(--text-muted); border: none; font-family: 'DM Sans', sans-serif; transition: background .15s, color .15s; }
+    .review-tab.active { background: var(--primary); color: #fff; }
+
+    /* Spinner */
+    .spinner { display: inline-block; width: 16px; height: 16px; border: 2.5px solid rgba(0,0,0,.1); border-top-color: var(--primary); border-radius: 50%; animation: spin .7s linear infinite; vertical-align: middle; margin-right: 6px; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* Divider */
+    .divider { border: none; border-top: 1.5px solid var(--border); margin: 20px 0; }
+
+    @media (max-width: 600px) {
+      .form-row { grid-template-columns: 1fr; }
+      .nav-grid { grid-template-columns: repeat(2, 1fr); }
+      .auth-card { padding: 28px 20px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ===== LANDING ===== -->
+<div id="landingPage" class="auth-wrap">
+  <div class="auth-card">
+    <div class="auth-logo">📚 BookShare</div>
+    <div class="auth-sub">Share, lend and discover books in your community</div>
+    <div class="landing-btns">
+      <button class="btn btn-primary btn-full" onclick="showLogin()">Login</button>
+      <button class="btn btn-ghost btn-full" onclick="showRegister()">Create Account</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== LOGIN ===== -->
+<div id="loginPage" class="auth-wrap hidden">
+  <div class="auth-card">
+    <div class="auth-logo">Welcome Back</div>
+    <div class="auth-sub">Sign in to your BookShare account</div>
+    <div id="loginAlert"></div>
+    <div class="form-group"><label class="form-label">Email</label><input id="loginEmail" class="form-input" type="email" placeholder="you@example.com" required /></div>
+    <div class="form-group"><label class="form-label">Password</label><input id="loginPassword" class="form-input" type="password" placeholder="••••••••" required /></div>
+    <button id="loginBtn" class="btn btn-primary btn-full" onclick="handleLogin()">Login</button>
+    <div class="auth-switch">Don't have an account? <a onclick="showRegister()">Register</a></div>
+  </div>
+</div>
+
+<!-- ===== REGISTER ===== -->
+<div id="registerPage" class="auth-wrap hidden">
+  <div class="auth-card">
+    <div class="auth-logo">Create Account</div>
+    <div class="auth-sub">Join the BookShare community</div>
+    <div id="registerAlert"></div>
+    <div class="form-row">
+      <div class="form-group"><label class="form-label">Full Name</label><input id="regName" class="form-input" placeholder="Your name" /></div>
+      <div class="form-group"><label class="form-label">Phone</label><input id="regPhone" class="form-input" placeholder="10-digit number" /></div>
+    </div>
+    <div class="form-group"><label class="form-label">Email</label><input id="regEmail" class="form-input" type="email" placeholder="you@example.com" /></div>
+    <div class="form-group"><label class="form-label">Password</label><input id="regPassword" class="form-input" type="password" placeholder="Choose a password" /></div>
+    <div class="form-row">
+      <div class="form-group"><label class="form-label">City</label><input id="regCity" class="form-input" placeholder="Your city" /></div>
+      <div class="form-group"><label class="form-label">Address</label><input id="regAddress" class="form-input" placeholder="Street / Area" /></div>
+    </div>
+    <button id="registerBtn" class="btn btn-primary btn-full" onclick="handleRegister()">Register</button>
+    <div class="auth-switch">Already have an account? <a onclick="showLogin()">Login</a></div>
+  </div>
+</div>
+
+<!-- ===== MAIN APP ===== -->
+<div id="mainApp" class="hidden">
+  <div class="header">
+    <div class="header-inner">
+      <div class="logo">Book<span>Share</span></div>
+      <div class="header-actions">
+        <span class="user-chip" id="userChip"></span>
+        <button class="btn btn-ghost btn-sm" onclick="goHome()">Home</button>
+        <button class="btn btn-sm" style="background:var(--surface2);color:var(--text)" onclick="handleLogout()">Logout</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="main-wrap">
+
+    <!-- Dashboard -->
+    <div id="dashboard">
+      <div class="dash-greeting">
+        <h2 id="dashGreeting">Good to see you!</h2>
+        <p>What would you like to do today?</p>
+      </div>
+      <div class="nav-grid">
+        <div class="nav-card" onclick="showSection('addBook'); loadCategories()">
+          <div class="icon">➕</div><div class="label">Add Book</div><div class="sublabel">List your book</div>
+        </div>
+        <div class="nav-card" onclick="showSection('browseBooks'); loadBrowseBooks()">
+          <div class="icon">📖</div><div class="label">Browse</div><div class="sublabel">Find available books</div>
+        </div>
+        <div class="nav-card" onclick="showSection('searchBooks')">
+          <div class="icon">🔍</div><div class="label">Search</div><div class="sublabel">By title, author, genre</div>
+        </div>
+        <div class="nav-card" onclick="showSection('myBooks'); loadMyBooks()">
+          <div class="icon">📚</div><div class="label">My Books</div><div class="sublabel">Books you listed</div>
+        </div>
+        <div class="nav-card" onclick="showSection('myActivities'); loadMyActivities()">
+          <div class="icon">📋</div><div class="label">Activities</div><div class="sublabel">Your transactions</div>
+        </div>
+        <div class="nav-card" onclick="showSection('reviews')">
+          <div class="icon">⭐</div><div class="label">Reviews</div><div class="sublabel">Read &amp; write reviews</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Add Book -->
+    <div id="addBook" class="section-card hidden">
+      <div class="section-header">
+        <button class="btn btn-ghost btn-sm" onclick="showDashboard()">← Back</button>
+        <h2 class="section-title">Add Your Book</h2>
+      </div>
+      <div id="addBookAlert"></div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Title</label><input id="bookTitle" class="form-input" placeholder="Book title" /></div>
+        <div class="form-group"><label class="form-label">Author</label><input id="bookAuthor" class="form-input" placeholder="Author name" /></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">ISBN (optional)</label><input id="bookISBN" class="form-input" /></div>
+        <div class="form-group"><label class="form-label">Publisher (optional)</label><input id="bookPublisher" class="form-input" /></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Category</label>
+          <select id="bookCategory" class="form-select" onchange="loadGenres()">
+            <option value="">Select Category</option>
+          </select>
+        </div>
+        <div class="form-group"><label class="form-label">Genre</label>
+          <select id="bookGenre" class="form-select"><option value="">Select Genre</option></select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Activity</label>
+          <select id="activityType" class="form-select" onchange="togglePriceField()">
+            <option value="">Select Action</option>
+            <option value="sell">Sell</option>
+            <option value="lend">Lend</option>
+            <option value="donate">Donate</option>
+          </select>
+        </div>
+        <div class="form-group hidden" id="priceGroup"><label class="form-label">Price (₹)</label>
+          <input id="bookPrice" class="form-input" type="number" min="0" step="0.01" placeholder="0.00" />
+        </div>
+      </div>
+      <button id="addBookBtn" class="btn btn-primary" onclick="handleAddBook()">Add Book</button>
+    </div>
+
+    <!-- Browse Books -->
+    <div id="browseBooks" class="section-card hidden">
+      <div class="section-header">
+        <button class="btn btn-ghost btn-sm" onclick="showDashboard()">← Back</button>
+        <h2 class="section-title">Available Books</h2>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Title</th><th>Author</th><th>Type</th><th>Price</th><th>Owner</th><th>City</th><th></th></tr></thead>
+          <tbody id="browseBooksBody"><tr class="empty-row"><td colspan="7"><span class="spinner"></span> Loading...</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Search Books -->
+    <div id="searchBooks" class="section-card hidden">
+      <div class="section-header">
+        <button class="btn btn-ghost btn-sm" onclick="showDashboard()">← Back</button>
+        <h2 class="section-title">Search Books</h2>
+      </div>
+      <div class="search-bar">
+        <input id="searchKeyword" class="form-input" placeholder="Search by title, author or genre…" onkeydown="if(event.key==='Enter') performSearch()" />
+        <button class="btn btn-primary" onclick="performSearch()">Search</button>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Title</th><th>Author</th><th>Genre</th><th>Type</th><th>Price</th><th>Owner</th><th></th></tr></thead>
+          <tbody id="searchResultsBody"><tr class="empty-row"><td colspan="7">Enter a keyword above to search</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- My Books -->
+    <div id="myBooks" class="section-card hidden">
+      <div class="section-header">
+        <button class="btn btn-ghost btn-sm" onclick="showDashboard()">← Back</button>
+        <h2 class="section-title">My Listed Books</h2>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Title</th><th>Author</th><th>Type</th><th>Price</th><th>Status</th></tr></thead>
+          <tbody id="myBooksBody"><tr class="empty-row"><td colspan="5"><span class="spinner"></span> Loading...</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- My Activities -->
+    <div id="myActivities" class="section-card hidden">
+      <div class="section-header">
+        <button class="btn btn-ghost btn-sm" onclick="showDashboard()">← Back</button>
+        <h2 class="section-title">My Activities</h2>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Book</th><th>Other Party</th><th>Type</th><th>Direction</th><th>Date</th><th>Price</th></tr></thead>
+          <tbody id="myActivitiesBody"><tr class="empty-row"><td colspan="6"><span class="spinner"></span> Loading...</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Reviews -->
+    <div id="reviews" class="section-card hidden">
+      <div class="section-header">
+        <button class="btn btn-ghost btn-sm" onclick="showDashboard()">← Back</button>
+        <h2 class="section-title">Reviews</h2>
+      </div>
+      <div class="review-tabs">
+        <button class="review-tab active" onclick="switchReviewTab('view', this)">View Reviews</button>
+        <button class="review-tab" onclick="switchReviewTab('write', this)">Write a Review</button>
+      </div>
+
+      <!-- View Reviews -->
+      <div id="reviewViewTab">
+        <div class="search-bar">
+          <input id="reviewSearchName" class="form-input" placeholder="Enter book title to search reviews…" onkeydown="if(event.key==='Enter') viewReviewsByName()" />
+          <button class="btn btn-primary" onclick="viewReviewsByName()">View</button>
+        </div>
+        <div id="reviewsContent"></div>
+      </div>
+
+      <!-- Write Review -->
+      <div id="reviewWriteTab" class="hidden">
+        <div id="writeReviewAlert"></div>
+        <div class="form-group"><label class="form-label">Book Title</label>
+          <div class="search-bar" style="margin-bottom:0">
+            <input id="writeReviewBookName" class="form-input" placeholder="Type book name…" />
+            <button class="btn btn-ghost" onclick="resolveBookForReview()">Find</button>
+          </div>
+          <div id="bookSearchResults" style="margin-top:8px"></div>
+        </div>
+        <div id="writeReviewForm" class="hidden">
+          <div class="form-group"><label class="form-label">Rating (1–5)</label>
+            <div id="starPicker" style="display:flex;gap:6px;margin-top:4px">
+              <span style="font-size:28px;cursor:pointer" onclick="setRating(1)" data-val="1">☆</span>
+              <span style="font-size:28px;cursor:pointer" onclick="setRating(2)" data-val="2">☆</span>
+              <span style="font-size:28px;cursor:pointer" onclick="setRating(3)" data-val="3">☆</span>
+              <span style="font-size:28px;cursor:pointer" onclick="setRating(4)" data-val="4">☆</span>
+              <span style="font-size:28px;cursor:pointer" onclick="setRating(5)" data-val="5">☆</span>
+            </div>
+            <input type="hidden" id="selectedRating" value="0" />
+          </div>
+          <div class="form-group"><label class="form-label">Comment</label><textarea id="reviewComment" class="form-textarea" placeholder="Share your thoughts about this book…"></textarea></div>
+          <button class="btn btn-primary" onclick="submitReview()">Submit Review</button>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /main-wrap -->
+</div><!-- /mainApp -->
+
+<!-- Request Modal -->
+<div id="requestModal" class="modal-overlay">
+  <div class="modal-box">
+    <div class="modal-header">
+      <h3>Request Book</h3>
+      <button class="modal-close" onclick="closeRequestModal()">×</button>
+    </div>
+    <div id="requestModalContent"></div>
+  </div>
+</div>
+
+<script>
+const API = 'http://127.0.0.1:5000/api';
+let currentUser = null;
+let selectedBookIdForReview = null;
+
+// ── helpers ──────────────────────────────────────────────────────────────
+function esc(s) {
+  if (s == null) return '';
+  return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+function showAlert(containerId, msg, type='error') {
+  document.getElementById(containerId).innerHTML = `<div class="alert alert-${type}">${msg}</div>`;
+}
+function clearAlert(id) { document.getElementById(id).innerHTML = ''; }
+
+// ── page routing ─────────────────────────────────────────────────────────
+function hideAllPages() {
+  ['landingPage','loginPage','registerPage','mainApp'].forEach(id => document.getElementById(id).classList.add('hidden'));
+}
+function showLogin() { hideAllPages(); document.getElementById('loginPage').classList.remove('hidden'); }
+function showRegister() { hideAllPages(); document.getElementById('registerPage').classList.remove('hidden'); }
+function goHome() { hideAllPages(); document.getElementById('landingPage').classList.remove('hidden'); }
+
+function showDashboard() {
+  ['addBook','browseBooks','searchBooks','myBooks','myActivities','reviews'].forEach(id => document.getElementById(id).classList.add('hidden'));
+  document.getElementById('dashboard').classList.remove('hidden');
+}
+function showSection(id) {
+  document.getElementById('dashboard').classList.add('hidden');
+  ['addBook','browseBooks','searchBooks','myBooks','myActivities','reviews'].forEach(s => document.getElementById(s).classList.add('hidden'));
+  document.getElementById(id).classList.remove('hidden');
+}
+
+function enterApp() {
+  hideAllPages();
+  document.getElementById('mainApp').classList.remove('hidden');
+  document.getElementById('userChip').textContent = currentUser.Name;
+  document.getElementById('dashGreeting').textContent = `Hello, ${currentUser.Name}!`;
+  showDashboard();
+}
+
+function handleLogout() {
+  currentUser = null;
+  goHome();
+}
+
+// ── auth ─────────────────────────────────────────────────────────────────
+async function handleLogin() {
+  const btn = document.getElementById('loginBtn');
+  clearAlert('loginAlert');
+  const email = document.getElementById('loginEmail').value.trim();
+  const password = document.getElementById('loginPassword').value;
+  if (!email || !password) return showAlert('loginAlert', 'Please fill in all fields.');
+  btn.disabled = true; btn.textContent = 'Logging in…';
+  try {
+    const r = await fetch(API + '/login', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({email, password}) });
+    const d = await r.json();
+    if (d.success) { currentUser = d.user; enterApp(); }
+    else showAlert('loginAlert', d.message || 'Invalid credentials.');
+  } catch(e) { showAlert('loginAlert', 'Cannot reach server. Is app.py running?'); }
+  finally { btn.disabled = false; btn.textContent = 'Login'; }
+}
+
+async function handleRegister() {
+  const btn = document.getElementById('registerBtn');
+  clearAlert('registerAlert');
+  const payload = {
+    name: document.getElementById('regName').value.trim(),
+    email: document.getElementById('regEmail').value.trim(),
+    password: document.getElementById('regPassword').value,
+    phone: document.getElementById('regPhone').value.trim(),
+    city: document.getElementById('regCity').value.trim(),
+    address: document.getElementById('regAddress').value.trim()
+  };
+  if (!payload.name || !payload.email || !payload.password) return showAlert('registerAlert', 'Please fill all required fields.');
+  btn.disabled = true; btn.textContent = 'Registering…';
+  try {
+    const r = await fetch(API + '/register', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload) });
+    const d = await r.json();
+    if (d.success) { showAlert('registerAlert', 'Account created! Redirecting to login…', 'success'); setTimeout(showLogin, 1500); }
+    else showAlert('registerAlert', d.message || 'Registration failed.');
+  } catch(e) { showAlert('registerAlert', 'Cannot reach server.'); }
+  finally { btn.disabled = false; btn.textContent = 'Register'; }
+}
+
+// ── categories & genres ───────────────────────────────────────────────────
+async function loadCategories() {
+  try {
+    const r = await fetch(API + '/categories');
+    const d = await r.json();
+    const sel = document.getElementById('bookCategory');
+    sel.innerHTML = '<option value="">Select Category</option>';
+    if (d.success) d.data.forEach(c => sel.innerHTML += `<option value="${c.Category_id}">${esc(c.Category_Name)}</option>`);
+  } catch(e) {}
+}
+async function loadGenres() {
+  const cid = document.getElementById('bookCategory').value; if (!cid) return;
+  try {
+    const r = await fetch(API + '/genres?category_id=' + encodeURIComponent(cid));
+    const d = await r.json();
+    const sel = document.getElementById('bookGenre');
+    sel.innerHTML = '<option value="">Select Genre</option>';
+    if (d.success) d.data.forEach(g => sel.innerHTML += `<option value="${g.Genre_id}">${esc(g.Genre_Name)}</option>`);
+  } catch(e) {}
+}
+function togglePriceField() {
+  const t = document.getElementById('activityType').value;
+  document.getElementById('priceGroup').classList.toggle('hidden', !(t === 'sell' || t === 'lend'));
+}
+
+// ── add book ──────────────────────────────────────────────────────────────
+async function handleAddBook() {
+  clearAlert('addBookAlert');
+  const payload = {
+    user_id: currentUser.User_id,
+    title: document.getElementById('bookTitle').value.trim(),
+    author: document.getElementById('bookAuthor').value.trim(),
+    isbn: document.getElementById('bookISBN').value.trim(),
+    publisher: document.getElementById('bookPublisher').value.trim(),
+    category_id: document.getElementById('bookCategory').value,
+    genre_id: document.getElementById('bookGenre').value,
+    activity_type: document.getElementById('activityType').value,
+    price: document.getElementById('bookPrice').value || 0
+  };
+  if (!payload.title || !payload.author || !payload.activity_type) return showAlert('addBookAlert', 'Title, author and activity type are required.');
+  const btn = document.getElementById('addBookBtn');
+  btn.disabled = true; btn.textContent = 'Adding…';
+  try {
+    const r = await fetch(API + '/books', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload) });
+    const d = await r.json();
+    if (d.success) { showAlert('addBookAlert', 'Book listed successfully!', 'success'); document.getElementById('bookTitle').value = ''; }
+    else showAlert('addBookAlert', d.message || 'Error adding book.');
+  } catch(e) { showAlert('addBookAlert', e.message); }
+  finally { btn.disabled = false; btn.textContent = 'Add Book'; }
+}
+
+// ── browse books ──────────────────────────────────────────────────────────
+async function loadBrowseBooks() {
+  const body = document.getElementById('browseBooksBody');
+  body.innerHTML = '<tr class="empty-row"><td colspan="7"><span class="spinner"></span> Loading…</td></tr>';
+  try {
+    const r = await fetch(API + `/books/available?user_id=${encodeURIComponent(currentUser.User_id)}`);
+    const d = await r.json();
+    if (d.success && d.data.length) {
+      body.innerHTML = d.data.map(b => `<tr>
+        <td><strong>${esc(b.Title)}</strong></td>
+        <td>${esc(b.Author)}</td>
+        <td>${badgeType(b.Activity_type)}</td>
+        <td>₹${b.Price || 0}</td>
+        <td>${esc(b.Owner)}</td>
+        <td>${esc(b.City)}</td>
+        <td>${b.Owner_id === currentUser.User_id
+          ? '<span class="badge badge-green">Your Book</span>'
+          : `<button class="btn btn-primary btn-sm" onclick="openRequestModal(${b.Book_id}, ${b.Owner_id}, '${esc(b.Activity_type)}', ${b.Price || 0}, '${esc(b.Title)}', '${esc(b.Owner)}')">Request</button>`
+        }</td>
+      </tr>`).join('');
+    } else {
+      body.innerHTML = '<tr class="empty-row"><td colspan="7">No books available right now.</td></tr>';
+    }
+  } catch(e) { body.innerHTML = `<tr class="empty-row"><td colspan="7">Error: ${e.message}</td></tr>`; }
+}
+
+function badgeType(t) {
+  const map = { sell:'badge-amber', lend:'badge-green', donate:'badge-green', buy:'badge-amber', borrow:'badge-green', donation:'badge-green' };
+  return `<span class="badge ${map[t]||'badge-amber'}">${esc(t)}</span>`;
+}
+
+// ── search ────────────────────────────────────────────────────────────────
+async function performSearch() {
+  const kw = document.getElementById('searchKeyword').value.trim();
+  const body = document.getElementById('searchResultsBody');
+  if (!kw) { body.innerHTML = '<tr class="empty-row"><td colspan="7">Enter a keyword to search</td></tr>'; return; }
+  body.innerHTML = '<tr class="empty-row"><td colspan="7"><span class="spinner"></span> Searching…</td></tr>';
+  try {
+    const r = await fetch(API + `/books/search?keyword=${encodeURIComponent(kw)}&user_id=${encodeURIComponent(currentUser.User_id)}`);
+    const d = await r.json();
+    if (d.success && d.data.length) {
+      body.innerHTML = d.data.map(b => `<tr>
+        <td><strong>${esc(b.Title)}</strong></td>
+        <td>${esc(b.Author)}</td>
+        <td>${esc(b.Genre_Name || '—')}</td>
+        <td>${badgeType(b.Activity_type)}</td>
+        <td>₹${b.Price || 0}</td>
+        <td>${esc(b.Owner)}</td>
+        <td>${b.Owner_id ? `<button class="btn btn-primary btn-sm" onclick="openRequestModal(${b.Book_id}, ${b.Owner_id}, '${esc(b.Activity_type)}', ${b.Price||0}, '${esc(b.Title)}', '${esc(b.Owner)}')">Request</button>` : ''}</td>
+      </tr>`).join('');
+    } else {
+      body.innerHTML = '<tr class="empty-row"><td colspan="7">No results found.</td></tr>';
+    }
+  } catch(e) { body.innerHTML = `<tr class="empty-row"><td colspan="7">Error: ${e.message}</td></tr>`; }
+}
+
+// ── my books & activities ─────────────────────────────────────────────────
+async function loadMyBooks() {
+  const body = document.getElementById('myBooksBody');
+  body.innerHTML = '<tr class="empty-row"><td colspan="5"><span class="spinner"></span> Loading…</td></tr>';
+  try {
+    const r = await fetch(API + `/books/my-books?user_id=${encodeURIComponent(currentUser.User_id)}`);
+    const d = await r.json();
+    if (d.success && d.data.length) {
+      body.innerHTML = d.data.map(b => `<tr>
+        <td><strong>${esc(b.Title)}</strong></td>
+        <td>${esc(b.Author)}</td>
+        <td>${badgeType(b.Activity_type)}</td>
+        <td>₹${b.Price || 0}</td>
+        <td>${b.Available ? '<span class="badge badge-green">Available</span>' : '<span class="badge badge-red">Unavailable</span>'}</td>
+      </tr>`).join('');
+    } else {
+      body.innerHTML = '<tr class="empty-row"><td colspan="5">You haven\'t listed any books yet.</td></tr>';
+    }
+  } catch(e) { body.innerHTML = `<tr class="empty-row"><td colspan="5">Error: ${e.message}</td></tr>`; }
+}
+
+async function loadMyActivities() {
+  const body = document.getElementById('myActivitiesBody');
+  body.innerHTML = '<tr class="empty-row"><td colspan="6"><span class="spinner"></span> Loading…</td></tr>';
+  try {
+    const r = await fetch(API + `/activities/my-activities?user_id=${encodeURIComponent(currentUser.User_id)}`);
+    const d = await r.json();
+    if (d.success && d.data.length) {
+      body.innerHTML = d.data.map(a => `<tr>
+        <td><strong>${esc(a.Title)}</strong></td>
+        <td>${esc(a.Other_Party)}</td>
+        <td>${badgeType(a.Activity_type)}</td>
+        <td><span class="badge ${a.Direction==='Sent'?'badge-amber':'badge-green'}">${esc(a.Direction)}</span></td>
+        <td>${esc(a.Date)}</td>
+        <td>₹${a.Price || 0}</td>
+      </tr>`).join('');
+    } else {
+      body.innerHTML = '<tr class="empty-row"><td colspan="6">No activities yet.</td></tr>';
+    }
+  } catch(e) { body.innerHTML = `<tr class="empty-row"><td colspan="6">Error: ${e.message}</td></tr>`; }
+}
+
+// ── request modal (with seller phone + COD note) ──────────────────────────
+let pendingRequest = null;
+
+function openRequestModal(bookId, ownerId, activityType, price, title, owner) {
+  pendingRequest = { bookId, ownerId, activityType, price };
+  document.getElementById('requestModalContent').innerHTML = `
+    <div class="book-detail">
+      <p><strong>${esc(title)}</strong></p>
+      <p>Owner: ${esc(owner)}</p>
+      <p>Type: ${activityType} &nbsp;|&nbsp; Price: ₹${price}</p>
+    </div>
+    <div class="cod-note">💡 <strong>Cash on Delivery only.</strong> No pre-payment required. Pay the seller when you receive the book.</div>
+    <div style="margin-top:16px;display:flex;gap:10px">
+      <button class="btn btn-primary" onclick="confirmRequest()">Confirm Request</button>
+      <button class="btn btn-ghost" onclick="closeRequestModal()">Cancel</button>
+    </div>
+    <div id="requestResult" style="margin-top:12px"></div>
+  `;
+  document.getElementById('requestModal').classList.add('active');
+}
+
+function closeRequestModal() {
+  document.getElementById('requestModal').classList.remove('active');
+  pendingRequest = null;
+}
+
+async function confirmRequest() {
+  if (!pendingRequest || !currentUser) return;
+  const btn = document.querySelector('#requestModalContent .btn-primary');
+  btn.disabled = true; btn.textContent = 'Sending…';
+  const actMap = { sell:'buy', lend:'borrow', donate:'donation' };
+  const payload = {
+    owner_id: pendingRequest.ownerId,
+    receiver_id: currentUser.User_id,
+    book_id: pendingRequest.bookId,
+    activity_type: actMap[pendingRequest.activityType] || pendingRequest.activityType,
+    price: pendingRequest.price
+  };
+  try {
+    const r = await fetch(API + '/activities/request', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload) });
+    const d = await r.json();
+    if (d.success) {
+      // Show seller's phone number
+      const sellerHtml = d.seller ? `
+        <div class="seller-contact">
+          <h4>📞 Seller Contact Details</h4>
+          <p><strong>${esc(d.seller.name)}</strong></p>
+          <p>Phone: <strong>${esc(d.seller.phone)}</strong></p>
+        </div>
+        <div class="cod-note" style="margin-top:10px">Reach out to the seller to arrange delivery. Pay in cash when you receive the book.</div>
+      ` : '';
+      document.getElementById('requestResult').innerHTML = `<div class="alert alert-success">Request recorded!</div>${sellerHtml}`;
+      // remove action buttons
+      btn.remove();
+      document.querySelector('#requestModalContent .btn-ghost').remove();
+      loadBrowseBooks();
+    } else {
+      document.getElementById('requestResult').innerHTML = `<div class="alert alert-error">${d.message || 'Error'}</div>`;
+      btn.disabled = false; btn.textContent = 'Confirm Request';
+    }
+  } catch(e) {
+    document.getElementById('requestResult').innerHTML = `<div class="alert alert-error">${e.message}</div>`;
+    btn.disabled = false; btn.textContent = 'Confirm Request';
+  }
+}
+
+// ── reviews ───────────────────────────────────────────────────────────────
+function switchReviewTab(tab, el) {
+  document.querySelectorAll('.review-tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('reviewViewTab').classList.toggle('hidden', tab !== 'view');
+  document.getElementById('reviewWriteTab').classList.toggle('hidden', tab !== 'write');
+}
+
+async function viewReviewsByName() {
+  const name = document.getElementById('reviewSearchName').value.trim();
+  const out = document.getElementById('reviewsContent');
+  if (!name) { out.innerHTML = '<div class="alert alert-error">Enter a book title.</div>'; return; }
+  out.innerHTML = '<div style="padding:16px;color:var(--text-muted)"><span class="spinner"></span> Loading…</div>';
+  try {
+    const r = await fetch(API + `/reviews/by-name?title=${encodeURIComponent(name)}`);
+    const d = await r.json();
+    if (d.success && d.data.length) {
+      out.innerHTML = `<p style="font-size:13px;color:var(--text-muted);margin-bottom:12px">Showing reviews for <strong>${esc(d.book_title)}</strong></p>` +
+        d.data.map(rv => `
+          <div style="padding:14px;border-bottom:1px solid var(--border)">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
+              <strong style="font-size:14px">${esc(rv.Reviewer)}</strong>
+              <span class="stars">${'★'.repeat(rv.Rating)}${'☆'.repeat(5-rv.Rating)}</span>
+            </div>
+            <p style="font-size:14px;color:var(--text-muted);margin-bottom:4px">${esc(rv.Comment)}</p>
+            <p style="font-size:12px;color:var(--text-muted)">${esc(rv.Date)}</p>
+          </div>
+        `).join('');
+    } else if (d.success) {
+      out.innerHTML = `<div class="alert alert-error">No reviews yet for <strong>${esc(d.book_title)}</strong>.</div>`;
+    } else {
+      out.innerHTML = `<div class="alert alert-error">${d.message || 'Book not found.'}</div>`;
+    }
+  } catch(e) { out.innerHTML = `<div class="alert alert-error">${e.message}</div>`; }
+}
+
+// resolve book name before writing review
+async function resolveBookForReview() {
+  const name = document.getElementById('writeReviewBookName').value.trim();
+  const resultsDiv = document.getElementById('bookSearchResults');
+  document.getElementById('writeReviewForm').classList.add('hidden');
+  selectedBookIdForReview = null;
+  if (!name) return;
+  resultsDiv.innerHTML = '<span class="spinner"></span>';
+  try {
+    const r = await fetch(API + `/books/by-name?title=${encodeURIComponent(name)}`);
+    const d = await r.json();
+    if (d.success && d.data.length) {
+      if (d.data.length === 1) {
+        selectBookForReview(d.data[0].Book_id, d.data[0].Title);
+        resultsDiv.innerHTML = `<div class="alert alert-success" style="font-size:13px">Found: <strong>${esc(d.data[0].Title)}</strong></div>`;
+      } else {
+        resultsDiv.innerHTML = `<div style="border:1.5px solid var(--border);border-radius:8px;overflow:hidden">` +
+          d.data.map(b => `<div style="padding:10px 14px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;font-size:14px">
+            <span><strong>${esc(b.Title)}</strong> — ${esc(b.Author)}</span>
+            <button class="btn btn-ghost btn-sm" onclick="selectBookForReview(${b.Book_id}, '${esc(b.Title)}')">Select</button>
+          </div>`).join('') + '</div>';
+      }
+    } else {
+      resultsDiv.innerHTML = '<div class="alert alert-error" style="font-size:13px">No book found with that title.</div>';
+    }
+  } catch(e) { resultsDiv.innerHTML = `<div class="alert alert-error">${e.message}</div>`; }
+}
+
+function selectBookForReview(id, title) {
+  selectedBookIdForReview = id;
+  document.getElementById('writeReviewForm').classList.remove('hidden');
+  document.getElementById('bookSearchResults').innerHTML = `<div class="alert alert-success" style="font-size:13px">Selected: <strong>${esc(title)}</strong></div>`;
+}
+
+let currentRating = 0;
+function setRating(val) {
+  currentRating = val;
+  document.getElementById('selectedRating').value = val;
+  document.querySelectorAll('#starPicker span').forEach((s, i) => {
+    s.textContent = i < val ? '★' : '☆';
+    s.style.color = i < val ? 'var(--accent)' : 'var(--text-muted)';
+  });
+}
+
+async function submitReview() {
+  clearAlert('writeReviewAlert');
+  if (!selectedBookIdForReview) return showAlert('writeReviewAlert', 'Please find and select a book first.');
+  if (!currentRating) return showAlert('writeReviewAlert', 'Please select a rating.');
+  const comment = document.getElementById('reviewComment').value.trim();
+  const payload = { user_id: currentUser.User_id, book_id: selectedBookIdForReview, rating: currentRating, comment };
+  try {
+    const r = await fetch(API + '/reviews', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload) });
+    const d = await r.json();
+    if (d.success) {
+      showAlert('writeReviewAlert', 'Review submitted successfully!', 'success');
+      document.getElementById('reviewComment').value = '';
+      setRating(0);
+      selectedBookIdForReview = null;
+      document.getElementById('writeReviewForm').classList.add('hidden');
+      document.getElementById('bookSearchResults').innerHTML = '';
+      document.getElementById('writeReviewBookName').value = '';
+    } else {
+      showAlert('writeReviewAlert', d.message || 'Could not submit review.');
+    }
+  } catch(e) { showAlert('writeReviewAlert', e.message); }
+}
+
+// ── init ──────────────────────────────────────────────────────────────────
+window.addEventListener('load', async () => {
+  try {
+    await fetch(API + '/categories');
+  } catch(e) {
+    console.warn('API not reachable:', e.message);
+  }
+});
+</script>
+</body>
+</html>
