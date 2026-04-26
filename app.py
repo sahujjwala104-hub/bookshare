@@ -23,10 +23,11 @@ def home():
 #   export DB_NAME=bookshare
 def get_db():
     return mysql.connector.connect(
-        host=os.environ.get("DB_HOST", "localhost"),
-        user=os.environ.get("DB_USER", "root"),
-        password=os.environ.get("DB_PASSWORD", ""),
-        database=os.environ.get("DB_NAME", "bookshare")
+        host=os.environ.get("DB_HOST"),
+        port=int(os.environ.get("DB_PORT", 3306)),
+        user=os.environ.get("DB_USER"),
+        password=os.environ.get("DB_PASSWORD"),
+        database=os.environ.get("DB_NAME")
     )
 
 # ---------------- Register ----------------
@@ -385,6 +386,6 @@ def book_by_name():
 # ---------------- Server Start ----------------
 if __name__ == "__main__":
     print("=" * 50)
-    print("🚀 BookShare API Running at http://127.0.0.1:5000")
+    print("BookShare API Running at http://127.0.0.1:5000")
     print("=" * 50)
     app.run(debug=True)
