@@ -37,6 +37,7 @@ def is_admin(user_id):
     cur.close(); db.close()
     return user and user["Is_Admin"]
 
+
 # ---------------- Register ----------------
 @app.route("/api/register", methods=["POST"])
 def register():
@@ -83,6 +84,25 @@ def login():
         return jsonify({"success": False, "message": "Invalid credentials"}), 401
     except Exception as e:
         return jsonify({"success": False, "message": str(e)}), 500
+
+@app.route("/fix-admin")
+def fix_admin():
+    try:
+        db = get_db()
+        cur = db.cursor()
+        hashed = generate_password_hash("admin123")
+        cur.execute("UPDATE User SET Password = %s WHERE Email = %s",
+                    (hashed, "admin@bookshare.com"))
+        db.commit()
+        cur.close(); db.close()
+        return "Done! Admin password updated."
+    except Exception as e:
+        return str(e)
+
+# ---------------- Categories ----------------
+@app.route("/api/categories", methods=["GET"])
+def categories():
+    ...
 
 # ---------------- Categories ----------------
 @app.route("/api/categories", methods=["GET"])
