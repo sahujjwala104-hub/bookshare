@@ -99,10 +99,6 @@ def fix_admin():
     except Exception as e:
         return str(e)
 
-# ---------------- Categories ----------------
-@app.route("/api/categories", methods=["GET"])
-def categories():
-    ...
 
 # ---------------- Categories ----------------
 @app.route("/api/categories", methods=["GET"])
