@@ -266,7 +266,7 @@
       <div class="section-header"><button class="btn btn-ghost btn-sm" onclick="showDashboard()">← Back</button><h2 class="section-title">My Listed Books</h2></div>
       <div class="table-wrap">
         <table>
-          <thead><tr><th>Title</th><th>Author</th><th>Type</th><th>Price</th><th>Status</th></tr></thead>
+          <thead><tr><th>Title</th><th>Author</th><th>Type</th><th>Price</th><th>Status</th><th></th></tr></thead>
           <tbody id="myBooksBody"><tr class="empty-row"><td colspan="5"><span class="spinner"></span> Loading...</td></tr></tbody>
         </table>
       </div>
@@ -616,17 +616,30 @@ async function loadMyBooks() {
     const r = await fetch(API + `/api/books/my-books?user_id=${encodeURIComponent(currentUser.User_id)}`);
     const d = await r.json();
     if (d.success && d.data.length) {
-      body.innerHTML = d.data.map(b => `<tr>
+     body.innerHTML = d.data.map(b => `<tr>
         <td><strong>${esc(b.Title)}</strong></td>
         <td>${esc(b.Author)}</td>
         <td>${badgeType(b.Activity_type)}</td>
         <td>₹${b.Price || 0}</td>
         <td>${b.Available ? '<span class="badge badge-green">Available</span>' : '<span class="badge badge-red">Unavailable</span>'}</td>
+        <td>${b.Available ? `<button class="btn btn-sm" style="background:#f9eded;color:#8b3a3a;border:1.5px solid #e8c4c4" onclick="deleteBook(${b.Book_id})">Delete</button>` : '—'}</td>
       </tr>`).join('');
     } else {
       body.innerHTML = '<tr class="empty-row"><td colspan="5">You haven\'t listed any books yet.</td></tr>';
     }
   } catch(e) { body.innerHTML = `<tr class="empty-row"><td colspan="5">Error: ${e.message}</td></tr>`; }
+}
+
+async function deleteBook(bookId) {
+  if (!confirm('Remove this book from your listings?')) return;
+  try {
+    const r = await fetch(API + `/api/books/${bookId}?user_id=${encodeURIComponent(currentUser.User_id)}`, {
+      method: 'DELETE'
+    });
+    const d = await r.json();
+    if (d.success) loadMyBooks();  // refresh the list
+    else alert(d.message || 'Could not delete book.');
+  } catch(e) { alert(e.message); }
 }
 
 // ── my activities ──

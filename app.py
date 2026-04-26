@@ -199,6 +199,44 @@ def my_books():
         return jsonify({"success": True, "data": data})
     except Exception as e:
         return jsonify({"success": False, "message": str(e)}), 500
+    
+# ---------------- Delete Book ----------------
+@app.route("/api/books/<int:book_id>", methods=["DELETE"])
+def delete_book(book_id):
+    user_id = request.args.get("user_id")
+    try:
+        db = get_db(); cur = db.cursor(dictionary=True)
+
+        # Verify ownership
+        cur.execute("""
+            SELECT * FROM BookOwner WHERE Book_id = %s AND Owner_id = %s
+        """, (book_id, user_id))
+        ownership = cur.fetchone()
+
+        if not ownership:
+            cur.close(); db.close()
+            return jsonify({"success": False, "message": "Book not found or unauthorized"}), 403
+
+        # Check for past transactions
+        cur.execute("SELECT * FROM BookActivity WHERE Book_id = %s", (book_id,))
+        activity = cur.fetchone()
+
+        if activity:
+            # Has history — soft delete only
+            cur.execute("""
+                UPDATE BookOwner SET Available = FALSE 
+                WHERE Book_id = %s AND Owner_id = %s
+            """, (book_id, user_id))
+        else:
+            # No history — safe to fully remove
+            cur.execute("DELETE FROM BookOwner WHERE Book_id = %s AND Owner_id = %s", (book_id, user_id))
+            cur.execute("DELETE FROM Book WHERE Book_id = %s", (book_id,))
+
+        db.commit()
+        cur.close(); db.close()
+        return jsonify({"success": True, "message": "Book removed successfully"})
+    except Exception as e:
+        return jsonify({"success": False, "message": str(e)}), 500
 
 # ---------------- Buy / Borrow Book ----------------
 @app.route("/api/activities/request", methods=["POST"])
